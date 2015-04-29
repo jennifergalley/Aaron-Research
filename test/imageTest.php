@@ -76,7 +76,7 @@
         <!-- Image -->
         <div id="<?php echo $b.".".$num; ?>" style="display:none">
             <span class="left" style="color:<?php echo $left["color"]; ?>;
-                <?php if ($left['color'] == 'white') echo 'text-shadow: -3px 0 black, 3px 0 black, -3px 0 black, 3px 0 black;' ?>">
+                <?php if ($left['color'] == 'white') echo 'text-shadow: 3px 0 0 #000, 0 -3px 0 #000, 0 3px 0 #000, -3px 0 0 #000;' ?>">
                     <?php echo $left["character"]; ?>
             </span>
             <span class="right" style="color:<?php echo $right["color"]; ?>;

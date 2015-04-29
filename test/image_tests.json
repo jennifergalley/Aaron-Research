@@ -20,88 +20,88 @@
                 },
                 "2": {
                     "left": {
-                        "character": "8",
-                        "color": "purple"
+                        "character": "9",
+                        "color": "white"
                     },
                     "right": {
-                        "character": "7",
-                        "color": "white"
+                        "character": "2",
+                        "color": "purple"
                     }
                 },
                 "3": {
                     "left": {
-                        "character": "8",
-                        "color": "purple"
+                        "character": "6",
+                        "color": "white"
                     },
                     "right": {
-                        "character": "7",
-                        "color": "white"
+                        "character": "1",
+                        "color": "purple"
                     }
                 },
                 "4": {
                     "left": {
-                        "character": "8",
-                        "color": "purple"
-                    },
-                    "right": {
                         "character": "7",
                         "color": "white"
+                    },
+                    "right": {
+                        "character": "9",
+                        "color": "purple"
                     }
                 },
                 "5": {
                     "left": {
-                        "character": "8",
+                        "character": "3",
                         "color": "purple"
                     },
                     "right": {
-                        "character": "7",
+                        "character": "4",
                         "color": "white"
                     }
                 },
                 "6": {
                     "left": {
-                        "character": "8",
+                        "character": "6",
                         "color": "purple"
                     },
                     "right": {
-                        "character": "7",
+                        "character": "1",
                         "color": "white"
                     }
                 },
                 "7": {
                     "left": {
-                        "character": "8",
-                        "color": "purple"
+                        "character": "2",
+                        "color": "white"
                     },
                     "right": {
-                        "character": "7",
-                        "color": "white"
+                        "character": "9",
+                        "color": "purple"
                     }
                 },
                 "8": {
                     "left": {
-                        "character": "8",
+                        "character": "4",
                         "color": "purple"
                     },
                     "right": {
-                        "character": "7",
+                        "character": "5",
                         "color": "white"
                     }
                 },
                 "9": {
                     "left": {
-                        "character": "8",
-                        "color": "purple"
+                        "character": "6",
+                        "color": "white"
                     },
                     "right": {
-                        "character": "7",
-                        "color": "white"
+                        "character": "9",
+                        "color": "green"
                     }
                 },
                 "10": {
                     "left": {
                         "character": "8",
-                        "color": "purple"
+                        "color": "green"
                     },
                     "right": {
                         "character": "7",
@@ -110,18 +110,18 @@
                 },
                 "11": {
                     "left": {
-                        "character": "8",
-                        "color": "purple"
+                        "character": "2",
+                        "color": "green"
                     },
                     "right": {
-                        "character": "7",
+                        "character": "9",
                         "color": "white"
                     }
                 },
                 "12": {
                     "left": {
-                        "character": "8",
-                        "color": "purple"
+                        "character": "6",
+                        "color": "green"
                     },
                     "right": {
                         "character": "7",
@@ -133,16 +133,16 @@
         "Right Answers": {
             "1": "even",
             "2": "even",
-            "3": "even",
-            "4": "even",
-            "5": "even",
+            "3": "odd",
+            "4": "odd",
+            "5": "odd",
             "6": "even",
-            "7": "even",
+            "7": "odd",
             "8": "even",
             "9": "even",
-            "10": "even",
-            "11": "even",
-            "12": "even"
+            "10": "odd",
+            "11": "odd",
+            "12": "odd"
         }
     }
 }
