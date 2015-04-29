@@ -1,0 +1,91 @@
+application: aaron-landau
+version: 1
+runtime: php
+api_version: 1
+threadsafe: yes
+
+
+handlers:
+  # Serve php scripts.
+- url: /test/imageTest.php
+  script: /test/imageTest.php
+  
+- url: /test/soundTest.php
+  script: /test/soundTest.php
+  
+- url: /admin/admin.php
+  script: /admin/admin.php
+  
+- url: /admin/createImageTest.php
+  script: /admin/createImageTest.php
+  
+- url: /admin/createSoundTest.php
+  script: /admin/createSoundTest.php
+  
+- url: /admin/testingBrowse.php
+  script: /admin/testingBrowse.php
+  
+- url: /admin/uploadHandler.php
+  script: /admin/uploadHandler.php
+  
+- url: /admin/upload.php
+  script: /admin/upload.php
+  
+- url: /admin/viewImageTests.php
+  script: /admin/viewImageTests.php
+  
+- url: /admin/viewImageResults.php
+  script: /admin/viewImageResults.php
+  
+- url: /admin/viewSoundTests.php
+  script: /admin/viewSoundTests.php
+  
+- url: /admin/viewSoundResults.php
+  script: /admin/viewSoundResults.php
+  
+- url: /functions/functions.php
+  script: /functions/functions.php
+  
+- url: /results/saveImageResponses.php
+  script: /results/saveImageResponses.php
+  
+- url: /results/saveSoundResponses.php
+  script: /results/saveSoundResponses.php
+  
+- url: /config/footer.php
+  script: /config/footer.php
+  
+- url: /config/global.php
+  script: /config/global.php
+  
+- url: /config/header.php
+  script: /config/header.php
+  
+- url: /config/modules.php
+  script: /config/modules.php
+  
+- url: /css
+  static_dir: css
+  
+- url: /js
+  static_dir: js
+  
+- url: /images
+  static_dir: images
+  
+- url: /fonts
+  static_dir: fonts
+  
+- url: /(.+\.(png|jpg|wav))$
+  static_files: \1
+  upload: .+\.(png|jpg|wav)$
+  application_readable: true
+  
+- url: /(.+)/(.+)\.php$
+  script: \1\2
+
+- url: /(.+\.php)$
+  script: \1
+  
+- url: /.*
+  script: index.php
