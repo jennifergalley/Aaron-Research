@@ -1,4 +1,18 @@
     
+    function showStartPage () {
+        show("start");
+        allowResponses(); //allow responses
+    }
+    
+    function hideStartPage () {
+        var i = geti ();
+        hide("start");
+        increment ("elem", (+i)); //increment i to 1
+        setTimeout(function () {
+            showBaseImage();
+        }, 2000); //pause for 2s after they hit spacebar
+    }
+    
     function showBaseImage () {
         show ("base"); //show base image
         setTimeout(function() {
@@ -53,14 +67,24 @@
     }
     
     function response (e) {
-        end = +new Date();
-        var response_time = end - start;
-        disallowResponses (); //only allow response on response page
-        hideImage ();
+        disallowResponses (); //only allow response on specific pages
         var keycode = getResponse ();
         var i = geti ();
         var b = getBlock();
-
+        
+        if (i == 0) { //if they hit spacebar from the start page
+            if (keycode == 32) {
+                hideStartPage(); //hide start page and launch the test
+            } else {
+                showStartPage(); //return to start page, and allow responses
+            }
+            return; //don't continue executing this function
+        }
+        
+        end = +new Date();
+        var response_time = end - start;
+        hideImage ();
+        
         setCookie("response."+b+"."+i, keycode, 1); //save response
         setCookie("response_time."+b+"."+i, response_time, 1); //save response time
         
@@ -116,7 +140,8 @@
         }
     }
 
-    setCookie ("elem", 1, 1); //set i initially to 1
+    var end, start;
+    setCookie ("elem", 0, 1); //set i initially to 0
     setCookie ("block", 1, 1); //set block initially to 1
-    showBaseImage (); //show
+    showStartPage (); //show
     

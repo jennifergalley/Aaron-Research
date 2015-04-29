@@ -86,8 +86,8 @@
             <tr>
                 <td><b>Correct</b></td>
                 <td><?php $correctTotal += $block["Score"]; echo $block["Score"]; ?></td>
-                <td><?php $correctFirst += $block["Score"]; echo $block["Score First 40"]; ?></td>
-                <td><?php $correctSecond += $block["Score"]; echo $block["Score Second 20"]; ?></td>
+                <td><?php $correctFirst += $block["Score First 40"]; echo $block["Score First 40"]; ?></td>
+                <td><?php $correctSecond += $block["Score Second 20"]; echo $block["Score Second 20"]; ?></td>
             </tr>
             <tr>
                 <td><b>RT Correct</b></td>

@@ -51,13 +51,18 @@
 
 <!-- Test -->
 
+<!-- Start page -->
+<div id="start" style="display:none">
+    <h1>Press the space bar to start the practice round</h1>
+</div>
+
 <!-- Switch Screen -->
 <div id="switch" style="display:none">
     <h1><?php echo $test["Switch"]["text"]; ?></h1>
 </div>
 
 <!-- Base Image - crosshair -->
-<div id="base">
+<div id="base" style="display:none">
     <img class="test" src="<?php echo $imageURL.'cross.png';?>">
 </div>
 

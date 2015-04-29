@@ -113,4 +113,5 @@ table.view tr:nth-child(odd) {
 .right, .left {
     text-align: center;
     font-size: 20em;
+    margin-right: 100px; /*Spacing between letters*/
 }
