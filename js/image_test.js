@@ -81,38 +81,52 @@
             return; //don't continue executing this function
         }
         
-        end = +new Date();
-        var response_time = end - start;
-        hideImage ();
-        
-        setCookie("response."+b+"."+i, keycode, 1); //save response
-        setCookie("response_time."+b+"."+i, response_time, 1); //save response time
-        
-        
-        //check if it was the last question, and if so, save all the responses
-        if ((+b) == blocks && i == numberQuestions[blocks-1]) {
-            var url = "../results/saveImageResponses.php?participant="+participant+"&testVersion="+testVersion+"&";
-            var t = 1;
-            for (b=1; b <= blocks; b++) {
-                for (q=1; q <= numberQuestions[b-1]; q++) {
-                    url += t+"="+getCookie("response."+b+"."+q)+"&";
-                    url += t+"_time="+getCookie("response_time."+b+"."+q)+"&";
-                    t++;
+        if (keycode == 37 || keycode == 39) {
+            end = +new Date();
+            var response_time = end - start;
+            hideImage ();
+            
+            setCookie("response."+b+"."+i, keycode, 1); //save response
+            setCookie("response_time."+b+"."+i, response_time, 1); //save response time
+            
+            
+            //check if it was the last question, and if so, save all the responses
+            if ((+b) == blocks && i == numberQuestions[blocks-1]) {
+                var url = "../results/saveImageResponses.php?participant="+participant+"&testVersion="+testVersion+"&";
+                var t = 1;
+                for (b=1; b <= blocks; b++) {
+                    for (q=1; q <= numberQuestions[b-1]; q++) {
+                        url += t+"="+getCookie("response."+b+"."+q)+"&";
+                        url += t+"_time="+getCookie("response_time."+b+"."+q)+"&";
+                        t++;
+                    }
+                }
+                window.location = url;
+            } else {
+                if (i == numberQuestions[b-1]) { //last question in this block
+                    return; //stop?
                 }
             }
-            window.location = url;
-        } else {
-            if (i == numberQuestions[b-1]) { //last question in this block
-                return; //stop?
-            }
-        }
-        
-        //check if response was correct
-        var question = (+i) - (60 * ((+b)-1)); //question number in the current block (out of 60)
-        if ((keycode == 37 && correctAnswers[(+i)-1] != "even") || (keycode == 39 && correctAnswers[(+i)-1] != "odd")) { //37 = left = even, 39 = right = odd
-            show("wrong");
-            setTimeout(function() {
-                hideWrong();
+            
+            //check if response was correct
+            var question = (+i) - (60 * ((+b)-1)); //question number in the current block (out of 60)
+            if ((keycode == 37 && correctAnswers[(+i)-1] != "even") || (keycode == 39 && correctAnswers[(+i)-1] != "odd")) { //37 = left = even, 39 = right = odd
+                show("wrong");
+                setTimeout(function() {
+                    hideWrong();
+                    if (question == switchAfter) {
+                        show("switch"); //show switch text
+                        setTimeout(function() {
+                            hide("switch"); //hide switch text
+                            increment ("elem", (+i)); //increment i 
+                            showPause();
+                        }, switchDuration); //hide after the specified number of milliseconds
+                    } else {
+                        increment ("elem", (+i)); //increment i 
+                        showPause();
+                    }
+                }, 1000); //show X for 1000 ms
+            } else {
                 if (question == switchAfter) {
                     show("switch"); //show switch text
                     setTimeout(function() {
@@ -124,19 +138,9 @@
                     increment ("elem", (+i)); //increment i 
                     showPause();
                 }
-            }, 1000); //show X for 1000 ms
-        } else {
-            if (question == switchAfter) {
-                show("switch"); //show switch text
-                setTimeout(function() {
-                    hide("switch"); //hide switch text
-                    increment ("elem", (+i)); //increment i 
-                    showPause();
-                }, switchDuration); //hide after the specified number of milliseconds
-            } else {
-                increment ("elem", (+i)); //increment i 
-                showPause();
             }
+        } else {
+            showImage();
         }
     }
 
