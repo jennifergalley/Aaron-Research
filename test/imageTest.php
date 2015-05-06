@@ -17,7 +17,7 @@
         echo "<h2>Error - no tests available.</h2>";
     else : ?>
     <!-- Name Submit and Start Test -->
-    <h1>Take Image Test</h1>
+    <h1>Test 1</h1>
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <table class='form'>
             <tr>
@@ -80,10 +80,10 @@
          ?>
         <!-- Image -->
         <div id="<?php echo $b.".".$num; ?>" style="display:none">
-            <span class="left <?php if ($left['color'] == 'white') echo ', white' ?>" style="color:<?php echo $left["color"]; ?>;">
+            <span class="left <?php if ($left['color']=='white' or $left["color"]=='#ffffff') echo ', white' ?>" style="color:<?php echo $left["color"]; ?>;">
                     <?php echo $left["character"]; ?>
             </span>
-            <span class="right <?php if ($right['color'] == 'white') echo ', white' ?>" style="color:<?php echo $right["color"]; ?>;">
+            <span class="right <?php if ($right['color']=='white' or $right["color"]=='#ffffff') echo ', white' ?>" style="color:<?php echo $right["color"]; ?>;">
                     <?php echo $right["character"]; ?>
             </span>
         </div>

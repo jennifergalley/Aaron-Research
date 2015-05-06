@@ -40,8 +40,8 @@
                     <div class='collapse navbar-collapse' id='collapse'>
                         <ul class='nav navbar-nav'>
                             <!-- <li><a class="nav" href="<?php echo $subdir; ?>index.php">Home</a></li> -->
-                            <li><a class="nav" href="/test/imageTest.php">Take Image Test</a></li>
-                            <li><a class="nav" href="/test/soundTest.php">Take Sound Test</a></li>
+                            <li><a class="nav" href="/test/imageTest.php">Test 1</a></li>
+                            <li><a class="nav" href="/test/soundTest.php">Test 2</a></li>
                             <li><a class="nav" href="/admin/admin.php">Admin</a></li>
                         </ul>
                     </div>

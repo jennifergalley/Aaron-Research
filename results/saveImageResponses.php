@@ -24,9 +24,9 @@
             $questions[$i] = array ();
             
             if ($_GET[$i] == 39) { //right
-                $questions[$i]["answer"] = "odd"; 
+                $questions[$i]["answer"] = "right"; 
             } elseif ($_GET[$i] == 37) { //left
-                $questions[$i]["answer"] = "even";
+                $questions[$i]["answer"] = "left";
             } else { //was saving participant as 'no response'
                 $questions[$i]["answer"] = "no response"; //timed out
             }

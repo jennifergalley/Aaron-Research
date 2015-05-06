@@ -131,18 +131,164 @@
             }
         },
         "Right Answers": {
-            "1": "even",
-            "2": "even",
-            "3": "odd",
-            "4": "odd",
-            "5": "odd",
-            "6": "even",
-            "7": "odd",
-            "8": "even",
-            "9": "even",
-            "10": "odd",
-            "11": "odd",
-            "12": "odd"
+            "1": "left",
+            "2": "left",
+            "3": "right",
+            "4": "right",
+            "5": "right",
+            "6": "left",
+            "7": "right",
+            "8": "left",
+            "9": "left",
+            "10": "right",
+            "11": "right",
+            "12": "right"
+        }
+    },
+    "2": {
+        "Date": "05-05-15 08:44:55 pm",
+        "Switch": {
+            "after": "8",
+            "text": "The new target is white.",
+            "duration": "3000"
+        },
+        "Block": {
+            "1": {
+                "1": {
+                    "left": {
+                        "character": "A",
+                        "color": "purple"
+                    },
+                    "right": {
+                        "character": "B",
+                        "color": "white"
+                    }
+                },
+                "2": {
+                    "left": {
+                        "character": "C",
+                        "color": "green"
+                    },
+                    "right": {
+                        "character": "E",
+                        "color": "white"
+                    }
+                },
+                "3": {
+                    "left": {
+                        "character": "D",
+                        "color": "purple"
+                    },
+                    "right": {
+                        "character": "F",
+                        "color": "white"
+                    }
+                },
+                "4": {
+                    "left": {
+                        "character": "1",
+                        "color": "purple"
+                    },
+                    "right": {
+                        "character": "2",
+                        "color": "white"
+                    }
+                },
+                "5": {
+                    "left": {
+                        "character": "3",
+                        "color": "green"
+                    },
+                    "right": {
+                        "character": "4",
+                        "color": "white"
+                    }
+                },
+                "6": {
+                    "left": {
+                        "character": "6",
+                        "color": "white"
+                    },
+                    "right": {
+                        "character": "3",
+                        "color": "green"
+                    }
+                },
+                "7": {
+                    "left": {
+                        "character": "R",
+                        "color": "white"
+                    },
+                    "right": {
+                        "character": "T",
+                        "color": "green"
+                    }
+                },
+                "8": {
+                    "left": {
+                        "character": "D",
+                        "color": "purple"
+                    },
+                    "right": {
+                        "character": "E",
+                        "color": "white"
+                    }
+                },
+                "9": {
+                    "left": {
+                        "character": "E",
+                        "color": "purple"
+                    },
+                    "right": {
+                        "character": "R",
+                        "color": "green"
+                    }
+                },
+                "10": {
+                    "left": {
+                        "character": "E",
+                        "color": "white"
+                    },
+                    "right": {
+                        "character": "F",
+                        "color": "purple"
+                    }
+                },
+                "11": {
+                    "left": {
+                        "character": "E",
+                        "color": "purple"
+                    },
+                    "right": {
+                        "character": "F",
+                        "color": "white"
+                    }
+                },
+                "12": {
+                    "left": {
+                        "character": "3",
+                        "color": "purple"
+                    },
+                    "right": {
+                        "character": "4",
+                        "color": "white"
+                    }
+                }
+            }
+        },
+        "Right Answers": {
+            "1": "right",
+            "2": "left",
+            "3": "left",
+            "4": "left",
+            "5": "left",
+            "6": "right",
+            "7": "right",
+            "8": "right",
+            "9": "left",
+            "10": "right",
+            "11": "right",
+            "12": "right"
         }
     }
 }

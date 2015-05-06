@@ -21,6 +21,9 @@
         $json = decodeJSON($imageTests);
         $test = array ();
         $test["Date"] = date("m-d-y h:i:s a");
+        $test["Switch"]["after"] = $_POST['switch_after'];
+        $test["Switch"]["text"] = $_POST['switch_text'];
+        $test["Switch"]["duration"] = $_POST['switch_duration'];
         $blocks = array ();
         $correct = array ();
         $b = 1; $c = 1;
@@ -28,12 +31,12 @@
             $trials = array ();
             for ($i=0; $i<$_SESSION['trials']; $i++) {
                 $index = $i+1;
-                $first = $_POST['first_'.$j."_".$i];
-                $second = $_POST['second_'.$j."_".$i];
-                $trials["$index"] = array (
-                    "first" => $first,
-                    "second" => $second
-                );
+                
+                $trials["$index"]["left"]["character"] = $_POST['first_'.$j."_".$i];
+                $trials["$index"]["left"]["color"] = $_POST['first_'.$j."_".$i."_color"];
+                $trials["$index"]["right"]["character"] = $_POST['second_'.$j."_".$i];
+                $trials["$index"]["right"]["color"] = $_POST['second_'.$j."_".$i."_color"];
+                
                 $correct["$c"] = $_POST['correct_'.$j."_".$i];
                 $c++;
             }
@@ -63,11 +66,11 @@
             </tr>
             <tr>
                 <td><label for="blocks">Number of blocks:</label></td>
-                <td><input required type="number" name="blocks"></td>
+                <td><input required type="number" name="blocks" value="6"></td>
             </tr>
             <tr>
                 <td><label for="questions">Number of trials per block:</label></td>
-                <td><input required type="number" name="trials"></td>
+                <td><input required type="number" name="trials" value="60"></td>
             </tr>
         </table>
         <input type="submit" name="continue" value="Continue">
@@ -77,43 +80,70 @@
     <form method="post" action="<?php echo $upload_url; ?>" enctype="multipart/form-data">
         <?php for ($k=0; $k < $_SESSION['blocks']; $k++) : ?>
             <h2>Block <?php echo $k+1; ?></h2>
+            <table>
+                <tr>
+                    <!-- Switch After -->
+                    <td><label for="switch_after">Switch After: </label></td>
+                    <td><input name="switch_after" value="40" type="number"></td>
+                </tr>
+                <tr>
+                    <!-- Switch Text -->
+                    <td><label for="switch_text">Switch Text: </label></td>
+                    <td><input name="switch_text" value="The new target is" type="text"></td>
+                </tr>
+                <tr>
+                    <!-- Switch Duration -->
+                    <td><label for="switch_duration">Switch Duration (ms): </label></td>
+                    <td><input name="switch_duration" value="3000" type="number"></td>
+                </tr>
+            </table>
         <?php for ($i=0; $i < $_SESSION['trials']; $i++) : ?>
             <h3>Trial <?php echo $i+1; ?></h3>
             <table class='form'>
                 <tr>
-                    <!-- First Image -->
-                    <td><label for="<?php echo 'first_'.$k.'_'.$i; ?>">First Image:</label></td>
+                    <!-- First Character -->
+                    <td><label for="<?php echo 'first_'.$k.'_'.$i; ?>">First Character:</label></td>
+                    <td><input name="<?php echo 'first_'.$k.'_'.$i; ?>" type="text"></td>
                 </tr>
                 <tr>
-                <?php $j = 0;
-                    if ($handle = opendir('gs://aarons-tests/images/')) {
-                        while (false !== ($entry = readdir($handle))) : 
-                            $j++;
-                            $pic = $imageURL.$entry; ?>
-                    <td><label><input required type="radio" name="<?php echo 'first_'.$k.'_'.$i; ?>" value="<?php echo $entry; ?>"><img class="form_img" src="<?php echo $pic; ?>"></label></td>
-                    <?php if ($j % 6 == 0) echo "</tr><tr>"; 
-                        endwhile;
-                        closedir($handle);
-                    } ?>
-                <tr>
-                    <!-- Second Image -->
-                    <td><label for="<?php echo 'second_'.$k.'_'.$i; ?>">Second Image:</label></td>
+                    <!-- First Color -->
+                    <td><label for="<?php echo 'first_'.$k.'_'.$i.'_color'; ?>">First Character Color:</label></td>
+                    <td><select name="<?php echo 'first_'.$k.'_'.$i.'_color'; ?>">
+                            <option value="purple">Purple</option>
+                            <option value="white">White</option>
+                            <option value="green">Green</option>
+                        </select>
+                    </td>
                 </tr>
-                    <?php $j = 0; 
-                        if ($handle = opendir('gs://aarons-tests/images/')) {
-                        while (false !== ($entry = readdir($handle))) : 
-                            $j++;
-                            $pic = $imageURL.$entry; ?>
-                    <td><input required type="radio" name="<?php echo 'second_'.$k.'_'.$i; ?>" value="<?php echo $entry; ?>"><img class="form_img" src="<?php echo $pic; ?>"></td>
-                    <?php if ($j % 6 == 0) echo "</tr><tr>";  
-                        endwhile;
-                        closedir($handle);
-                    } ?>
+                <tr>
+                    <!-- Second Character -->
+                    <td><label for="<?php echo 'second_'.$k.'_'.$i; ?>">Second Character:</label></td>
+                    <td><input name="<?php echo 'second_'.$k.'_'.$i; ?>" type="text"></td>
+                </tr>
+                <tr>
+                    <!-- Second Color -->
+                    <td><label for="<?php echo 'second_'.$k.'_'.$i.'_color'; ?>">Second Character Color:</label></td>
+                    <td>
+                         <select name="<?php echo 'second_'.$k.'_'.$i.'_color'; ?>">
+                            <option value="purple">Purple</option>
+                            <option value="white">White</option>
+                            <option value="green">Green</option>
+                        </select>
+                    </td>
+                </tr>
                 <tr>
                     <!-- Correct Answer -->
                     <td><label for="correct<?php echo $i; ?>">Correct Answer:</label></td>
-                    <td><input required type="radio" name="correct_<?php echo $k.'_'.$i; ?>" value="yes">True</input></td>
-                    <td><input required type="radio" name="correct_<?php echo $k.'_'.$i; ?>" value="no">False</input></td>
+                    <td>
+                        <select name="correct_<?php echo $k.'_'.$i ?>">
+                            <option value="left">Left</option>
+                            <option value="right">Right</option>
+                            <!--<option value="left">Even</option>
+                            <option value="right">Odd</option>
+                            <option value="left">Consonant</option>
+                            <option value="right">Vowel</option>-->
+                        </select>
+                    </td>
                 </tr>
             </table>
             <br>

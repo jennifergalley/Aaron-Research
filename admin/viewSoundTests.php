@@ -62,7 +62,7 @@
         <tr>
             <th>Block</th>
             <th>Trial</th>
-            <th>First Image</th>
+            <th>Image</th>
             <th>Tone</th>
             <th>Right Answer</th>
         </tr>

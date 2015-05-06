@@ -110,7 +110,7 @@
             
             //check if response was correct
             var question = (+i) - (60 * ((+b)-1)); //question number in the current block (out of 60)
-            if ((keycode == 37 && correctAnswers[(+i)-1] != "even") || (keycode == 39 && correctAnswers[(+i)-1] != "odd")) { //37 = left = even, 39 = right = odd
+            if ((keycode == 37 && correctAnswers[(+i)-1] != "left") || (keycode == 39 && correctAnswers[(+i)-1] != "right")) { //37 = left, 39 = right
                 show("wrong");
                 setTimeout(function() {
                     hideWrong();
