@@ -67,7 +67,65 @@
                 onclick="return confirm('Are you sure you want to delete this test result?');">Delete This Result</a></td>
         </tr>
     </table>
-    <table class='view'>
+    
+     <?php 
+        $correct = $missed = 0;
+        $RTCorrect = $RTIncorrect = $RTTotal = 0;
+        $numBlocks = count($r["Block"]);
+    
+        foreach ($r["Block"] as $b => $block) : ?>
+        <h2>Block <?php echo $b; ?></h2>
+        <table class='view'>
+            <tr>
+                <td><b>Correct</b></td>
+                <td><?php $correct += $block["Score"]; echo $block["Score"]; ?></td>
+            </tr>
+            <tr>
+                <td><b>Missed</b></td>
+                <td><?php $missed += $block["Missed"]; echo $block["Missed"]; ?></td>
+            </tr>
+            <tr>
+                <td><b>RT Correct</b></td>
+                <td><?php $RTCorrect += $block["Average Correct"]; echo $block["Average Correct"]; ?></td>
+            </tr>
+            <tr>
+                <td><b>RT Incorrect</b></td>
+                <td><?php $RTIncorrect += $block["Average Wrong"]; echo $block["Average Wrong"]; ?></td>
+            </tr>
+            <tr>
+                <td><b>RT Total</b></td>
+                <td><?php $RTTotal += $block["Average Total"]; echo $block["Average Total"]; ?></td>
+            </tr>
+        </table>
+        <br/>
+        <hr>
+    <?php endforeach; ?>
+    
+    <h2>All Blocks</h2>
+        <table class='view'>
+            <tr>
+                <td><b>Correct</b></td>
+                <td><?php echo $correct; ?></td>
+            </tr>
+            <tr>
+                <td><b>Missed</b></td>
+                <td><?php echo $missed; ?></td>
+            </tr>
+            <tr>
+                <td><b>RT Correct</b></td>
+                <td><?php echo $RTCorrect / $numBlocks."ms"; ?></td>
+            </tr>
+            <tr>
+                <td><b>RT Incorrect</b></td>
+                <td><?php echo $RTIncorrect / $numBlocks."ms"; ?></td>
+            </tr>
+            <tr>
+                <td><b>RT Total</b></td>
+                <td><?php echo $RTTotal / $numBlocks."ms"; ?></td>
+            </tr>
+        </table>
+        
+<!--    <table class='view'>
         <tr>
             <th>Block</th>
             <th>Trial</th>
@@ -105,7 +163,7 @@
             <td>Average Response Time Overall</td>
             <td><?php echo $r["Average Total"]; ?></td>
         </tr>
-    </table>
+    </table>-->
 <?php
     require_once ($footer);
     endif;

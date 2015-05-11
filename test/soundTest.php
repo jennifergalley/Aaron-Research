@@ -9,7 +9,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo $subdir.'css/style.css';?>">
     <?php }
 
-    if (empty($_POST["name"]) and empty($_GET['done'])) : ?>
+    if (empty($_POST["name"]) and !isset($_GET['done'])) : ?>
     <div id="start">
 <?php 
     $test = decodeJSON ($soundTests);    
@@ -103,7 +103,7 @@
             $j++;
         }
     ?> ];
-    var all = <?php echo !empty($_GET['all']); ?>;
+    var all = <?php echo !empty($_GET['all']) ? 1 : 0; ?>;
 </script>
 
 <!-- Javascript Functions -->

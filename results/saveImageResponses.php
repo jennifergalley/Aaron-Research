@@ -13,6 +13,7 @@
     $numBlocks = count($test["Block"]);
     
     $blocks = array ();
+    $offset = 0;
     
     for ($j = 1; $j <= $numBlocks; $j++) {
         $numQuestions = count($test["Block"][$j]);
@@ -21,18 +22,19 @@
         $questions = array ();
         
         for ($i = 1; $i <= $numQuestions; $i++) {
+            $k = $i + $offset;
             $questions[$i] = array ();
             
-            if ($_GET[$i] == 39) { //right
+            if ($_GET[$k] == 39) { //right
                 $questions[$i]["answer"] = "right"; 
-            } elseif ($_GET[$i] == 37) { //left
+            } elseif ($_GET[$k] == 37) { //left
                 $questions[$i]["answer"] = "left";
             } else { //was saving participant as 'no response'
                 $questions[$i]["answer"] = "no response"; //timed out
             }
             
-            if ($correctAnswers[$i] == $questions[$i]["answer"]) { //got it correct
-                $correct += $_GET[$i."_time"]; //add response time to compute average
+            if ($correctAnswers[$k] == $questions[$i]["answer"]) { //got it correct
+                $correct += $_GET[$k."_time"]; //add response time to compute average
                 
                 if ($i <= 40) {
                     $first40score++;
@@ -44,13 +46,13 @@
                 $score++; //increment their score
             } else { //got it wrong
                 $numWrong++; //to compute average - know what to divide by
-                $wrong += $_GET[$i."_time"]; //add response time to compute average
+                $wrong += $_GET[$k."_time"]; //add response time to compute average
                 
                 $questions[$i]["correct"] = "false";   
             }
         
-            $total += $_GET[$i."_time"]; //total response time
-            $questions[$i]["response time"] = $_GET[$i."_time"]."ms";
+            $total += $_GET[$k."_time"]; //total response time
+            $questions[$i]["response time"] = $_GET[$k."_time"]."ms";
         }
         
         $results["Block"][$j]["Score First 40"] = $first40score;
@@ -68,6 +70,7 @@
         
         $results["Block"][$j]["Questions"] = $questions;
         
+        $offset += $numQuestions;
     }
     
     $arr[] = $results;

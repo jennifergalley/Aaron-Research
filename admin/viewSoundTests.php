@@ -26,7 +26,7 @@
             <td><?php echo $t["Type"]; ?></td>
         </tr>
         <tr>
-            <td><b>Block Number</b></td>
+            <td><b>Version Number</b></td>
             <td><?php echo $version; ?></td>
         </tr>
         <tr>
@@ -53,7 +53,7 @@
             <td><?php echo $t["Type"]; ?></td>
         </tr>
         <tr>
-            <td><b>Block Number</b></td>
+            <td><b>Version Number</b></td>
             <td><?php echo $version; ?></td>
         </tr>
         <tr>
