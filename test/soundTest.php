@@ -9,7 +9,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo $subdir.'css/style.css';?>">
     <?php }
 
-    if (empty($_POST["name"]) and empty($_GET)) : ?>
+    if (empty($_POST["name"]) and empty($_GET['done'])) : ?>
     <div id="start">
 <?php 
     $test = decodeJSON ($soundTests);    
@@ -18,7 +18,7 @@
     else : ?>
     <!-- Name Submit and Start Test -->
     <h1>Test 1</h1>
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); if (!empty($_GET['all'])) echo "?all=true"; ?>">
         <table class='form'>
             <tr>
                 <td><label for="version">Test Version:</label></td>
@@ -103,6 +103,7 @@
             $j++;
         }
     ?> ];
+    var all = <?php echo !empty($_GET['all']); ?>;
 </script>
 
 <!-- Javascript Functions -->

@@ -49,6 +49,10 @@
 ?>
         <table class='view'>
         <tr>
+            <td><b>Test Type</b></td>
+            <td><?php echo $t["Type"]; ?></td>
+        </tr>
+        <tr>
             <td><b>Block Number</b></td>
             <td><?php echo $version; ?></td>
         </tr>

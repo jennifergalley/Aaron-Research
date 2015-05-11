@@ -1,7 +1,7 @@
 <?php 
     session_start();
     require_once ("../config/global.php");
-    if (empty($_POST["version"])) {
+    if (empty($_POST["version"]) or empty($_GET['v'])) {
         require_once ($header);
         logout ();
     } else { ?>
@@ -44,9 +44,11 @@
     endif; ?>
 
 <!-- Populate Test -->
-<?php if (!empty($_POST["version"])) : 
+<?php if (!empty($_POST["version"]) or !empty($_GET['v'])) : 
     $test = decodeJSON ($imageTests);  
-    $test = $test[$_POST['version']];
+    $version = !empty($_POST['version']) ? $_POST['version'] : $_GET['v'];
+    $name = !empty($_POST['name']) ? $_POST['name'] : $_GET['n'];
+    $test = $test[$version];
 ?>
 
 <!-- Test -->
@@ -109,8 +111,8 @@
         $arr = rtrim($arr, ",");
         echo $arr;
     ?>];
-    var participant = "<?php echo $_POST['name']; ?>";
-    var testVersion = "<?php echo $_POST['version']; ?>";
+    var participant = "<?php echo $name; ?>";
+    var testVersion = "<?php echo $version; ?>";
     var switchAfter = <?php echo $test["Switch"]["after"]; ?>;
     var switchDuration = <?php echo $test["Switch"]["duration"]; ?>;
 </script>
@@ -121,7 +123,7 @@
 
 <?php 
     endif; 
-    if (empty($_POST["version"])) {
+    if (empty($_POST["version"]) or empty($_GET["v"])) {
         require_once ($footer);
     }
 ?>

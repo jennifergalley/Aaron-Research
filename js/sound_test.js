@@ -72,7 +72,7 @@
                         f++;
                     }
                 }
-                window.location = url;
+                window.location = url+"all="+all;
             } else {
                 if (i == numberQuestions[b-1]) {
                     showPause();

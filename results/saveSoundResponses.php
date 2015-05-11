@@ -54,5 +54,9 @@
     encodeJSON ($soundResponses, $arr);
 ?>
 <script type="text/javascript">
-    window.location = "<?php echo $subdir.'test/soundTest.php?done';?>";
+    window.location = "<?php 
+        if ($_GET['all'] == "0") 
+            echo $subdir.'test/soundTest.php?done';
+        else 
+            echo $subdir.'test/imageTest.php?n='.$_GET['participant'].'&v=1'; ?>";
 </script>

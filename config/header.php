@@ -42,6 +42,7 @@
                             <!-- <li><a class="nav" href="<?php echo $subdir; ?>index.php">Home</a></li> -->
                             <li><a class="nav" href="/test/soundTest.php">Test 1</a></li>
                             <li><a class="nav" href="/test/imageTest.php">Test 2</a></li>
+                            <li><a class="nav" href="/test/soundTest.php?all=true">All Tests</a></li>
                             <li><a class="nav" href="/admin/admin.php">Admin</a></li>
                         </ul>
                     </div>
