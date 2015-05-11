@@ -6,7 +6,7 @@
     
     if (!empty($_POST['login'])){
         //Form Validation
-        if ($_POST["user"] == "aaron" and $_POST["pswd"] == "password") {
+        if ($_POST["user"] == "aaron" and $_POST["pswd"] == "flower1") {
             $_SESSION['loggedIn'] = true;
         } else {
             $error = "Error - username or password incorrect.";
@@ -52,17 +52,18 @@
     
     <hr>-->
     
-    <h2>Image Test</h2>
-    <a class="nav" href="<?php echo $subdir; ?>admin/viewImageResults.php">View Results</a>
-    <a class="nav" href="<?php echo $subdir; ?>admin/viewImageTests.php">View Tests</a>
-    <a class="nav" href="<?php echo $subdir; ?>admin/createImageTest.php">Create Test</a>
     
-    <hr>
-    
-    <h2>Impulse Control</h2>
+    <h2>Test 1</h2>
     <a class="nav" href="<?php echo $subdir; ?>admin/viewSoundResults.php">View Results</a>
     <a class="nav" href="<?php echo $subdir; ?>admin/viewSoundTests.php">View Tests</a>
     <a class="nav" href="<?php echo $subdir; ?>admin/createSoundTest.php">Create Test</a>
+    
+    <hr>
+        
+    <h2>Test 2</h2>
+    <a class="nav" href="<?php echo $subdir; ?>admin/viewImageResults.php">View Results</a>
+    <a class="nav" href="<?php echo $subdir; ?>admin/viewImageTests.php">View Tests</a>
+    <a class="nav" href="<?php echo $subdir; ?>admin/createImageTest.php">Create Test</a>
     
     <hr>
     

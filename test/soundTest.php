@@ -17,7 +17,7 @@
         echo "<h2>Error - no tests available.</h2>";
     else : ?>
     <!-- Name Submit and Start Test -->
-    <h1>Test 2</h1>
+    <h1>Test 1</h1>
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <table class='form'>
             <tr>

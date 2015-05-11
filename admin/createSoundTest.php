@@ -4,22 +4,18 @@
     require_once ($header);
 
     $tests = decodeJSON ($soundTests);
-    $count = count ($tests); //get number of test versions already
     $error = "";
     
     redirectToLogin();
     
-    if (!empty($_POST['trials'])) {
-        $_SESSION['trials'] = $_POST['trials'];
-        $_SESSION['blocks'] = $_POST['blocks'];
-        if ($_POST['version'] > $count) {
-            $_SESSION['version'] = $_POST['version'];
-        } else {
-            $error = "Error: That test version already exists.";
-        }
+    if (!empty($_POST['continue'])) {
+        $_SESSION['type'] = $_POST['type'];
+        $_SESSION['trials'] = $_POST['type'] == 'practice' ? 20 : 120;
+        $_SESSION['blocks'] = $_POST['type'] == 'practice' ? 1 : 4;
     } elseif (!empty($_POST['submit'])) {
         $json = decodeJSON($soundTests);
         $test = array ();
+        $test["Type"] = $_SESSION['type'];
         $test["Date"] = date("m-d-y h:i:s a");
         $blocks = array ();
         $trials = array ();
@@ -40,7 +36,7 @@
         }
         $test["Block"] = $blocks;
         $test["Right Answers"] = $correct;
-        $json[$_SESSION['version']] = $test;
+        $json[] = $test;
         encodeJSON ($soundTests, $json);
         $error = "Test Created!";
         $count++; 
@@ -52,25 +48,30 @@
 
 <h1>Generate Sound Test</h1>
 
-<?php if (empty($_POST['trials']) or !empty($error)): 
+<?php if (empty($_POST['continue']) or !empty($error)): 
     displayError(); ?>
     <!-- Test Block & Number Trials -->
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <table class='form'>
             <tr>
-                <td><label for="version">Test Version (must be unique):</label></td>
-                <td><input required type="number" name="version" value="<?php echo $count+1; ?>"></td>
+                <td><label for="type">Type of test:</label></td>
+                <td>
+                    <select name="type">
+                        <option value="practice">Practice</option>
+                        <option value="test">Test</option>
+                    </select>
+                </td>
             </tr>
-            <tr>
+<!--            <tr>
                 <td><label for="blocks">Number of blocks:</label></td>
                 <td><input required type="number" name="blocks"></td>
             </tr>
             <tr>
                 <td><label for="trials">Number of trials per block:</label></td>
                 <td><input required type="number" name="trials"></td>
-            </tr>
+            </tr>-->
         </table>
-        <input type="submit" name="submit" value="Continue">
+        <input type="submit" name="continue" value="Continue">
     </form>
 <?php else: ?>
     <!-- Generate Test Form -->
