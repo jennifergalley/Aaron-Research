@@ -6,9 +6,8 @@
     $results = array ();
     $results["date"] = date("m-d-y h:i:s a");
     $results["participant"] = $_GET['participant'];
-    $results["test version"] = $_GET['testVersion'];
     $tests = decodeJSON ($soundTests);
-    $test = $tests[$_GET['testVersion']];
+    $test = $tests["test"];
     $correctAnswers = $test["Right Answers"];
     $numBlocks = count($test["Block"]);
     
@@ -75,5 +74,5 @@
         if ($_GET['all'] == "0") 
             echo $subdir.'test/soundTest.php?done';
         else 
-            echo $subdir.'test/imageTest.php?n='.$_GET['participant'].'&v=1'; ?>";
+            echo $subdir.'test/imageTest.php?n='.$_GET['participant']; ?>";
 </script>

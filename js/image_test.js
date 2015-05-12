@@ -92,7 +92,7 @@
             
             //check if it was the last question, and if so, save all the responses
             if ((+b) == blocks && i == numberQuestions[blocks-1]) {
-                var url = "../results/saveImageResponses.php?participant="+participant+"&testVersion="+testVersion+"&";
+                var url = "../results/saveImageResponses.php?participant="+participant+"&";
                 var t = 1;
                 for (b=1; b <= blocks; b++) {
                     for (q=1; q <= numberQuestions[b-1]; q++) {

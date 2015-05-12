@@ -15,7 +15,6 @@
     } elseif (!empty($_POST['submit'])) {
         $json = decodeJSON($soundTests);
         $test = array ();
-        $test["Type"] = $_SESSION['type'];
         $test["Date"] = date("m-d-y h:i:s a");
         $blocks = array ();
         $trials = array ();
@@ -36,7 +35,7 @@
         }
         $test["Block"] = $blocks;
         $test["Right Answers"] = $correct;
-        $json[] = $test;
+        $json[$_SESSION['type']] = $test;
         encodeJSON ($soundTests, $json);
         $error = "Test Created!";
         $count++; 

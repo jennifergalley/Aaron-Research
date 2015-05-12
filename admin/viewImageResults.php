@@ -25,10 +25,6 @@
             <td><?php echo $r["participant"]; ?></td>
         </tr>
         <tr>
-            <td><b>Test Version</b></td>
-            <td><?php echo $r["test version"]; ?></td>
-        </tr>
-        <tr>
             <td><b>Date Taken</b></td>
             <td><?php echo $r["date"]; ?></td>
         </tr>
@@ -49,14 +45,6 @@
         <tr>
             <td><b>Particpiant</b></td>
             <td><?php echo $r["participant"]; ?></td>
-        </tr>
-        <tr>
-            <td><b>Score</b></td>
-            <td><?php echo $r["Score"]; ?></td>
-        </tr>
-        <tr>
-            <td><b>Test Version</b></td>
-            <td><?php echo $r["test version"]; ?></td>
         </tr>
         <tr>
             <td><b>Date Taken</b></td>

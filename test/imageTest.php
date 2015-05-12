@@ -1,7 +1,7 @@
 <?php 
     session_start();
     require_once ("../config/global.php");
-    if (empty($_POST["version"]) or empty($_GET['v'])) {
+    if (empty($_POST["name"]) and empty($_GET['n'])) {
         require_once ($header);
         logout ();
     } else { ?>
@@ -21,14 +21,6 @@
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <table class='form'>
             <tr>
-                <td><label for="version">Test Version:</label></td>
-                <td><select required name="version">
-                    <?php foreach ($test as $num => $test) : ?>
-                        <option value="<?php echo $num; ?>"><?php echo $num; ?></option>
-                    <?php endforeach; ?>
-                </select></td>
-            </tr>
-            <tr>
                 <td><label for="name">Please enter your name:</label></td>
                 <td><input required type="text" name="name"></td>
             </tr>
@@ -44,11 +36,11 @@
     endif; ?>
 
 <!-- Populate Test -->
-<?php if (!empty($_POST["version"]) or !empty($_GET['v'])) : 
+<?php if (!empty($_POST["name"]) or !empty($_GET['n'])) : 
     $test = decodeJSON ($imageTests);  
-    $version = !empty($_POST['version']) ? $_POST['version'] : $_GET['v'];
     $name = !empty($_POST['name']) ? $_POST['name'] : $_GET['n'];
-    $test = $test[$version];
+    $type = "test"; //edit this
+    $test = $test[$type];
 ?>
 
 <!-- Test -->
@@ -112,7 +104,6 @@
         echo $arr;
     ?>];
     var participant = "<?php echo $name; ?>";
-    var testVersion = "<?php echo $version; ?>";
     var switchAfter = <?php echo $test["Switch"]["after"]; ?>;
     var switchDuration = <?php echo $test["Switch"]["duration"]; ?>;
 </script>
@@ -123,7 +114,7 @@
 
 <?php 
     endif; 
-    if (empty($_POST["version"]) or empty($_GET["v"])) {
+    if (empty($_POST["name"])) {
         require_once ($footer);
     }
 ?>

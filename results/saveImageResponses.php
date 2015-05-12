@@ -6,9 +6,8 @@
     $results = array ();
     $results["date"] = date("m-d-y h:i:s a");
     $results["participant"] = $_GET['participant'];
-    $results["test version"] = $_GET['testVersion'];
     $tests = decodeJSON ($imageTests);
-    $test = $tests[$_GET['testVersion']];
+    $test = $tests["test"];
     $correctAnswers = $test["Right Answers"];
     $numBlocks = count($test["Block"]);
     

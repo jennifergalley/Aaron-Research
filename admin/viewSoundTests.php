@@ -10,7 +10,7 @@
     } 
 ?>
 
-<a href="<?php if (!empty($_GET['id'])) echo 'viewSoundTests.php'; else echo 'admin.php'; ?>" target="_self" class="back"><?php if (!empty($_GET['id'])) echo 'Tests'; else echo 'Admin'; ?> &lt;&lt;</a>
+<a href="<?php if (!empty($_GET['type'])) echo 'viewSoundTests.php'; else echo 'admin.php'; ?>" target="_self" class="back"><?php if (!empty($_GET['type'])) echo 'Tests'; else echo 'Admin'; ?> &lt;&lt;</a>
 
 <h1>Test Blocks</h1>
 
@@ -18,16 +18,12 @@
     if (empty($tests)) :
         echo "<h2>There are currently no test versions available.</h2>";
     else :
-        if (empty($_GET['id'])) :
-            foreach ($tests as $version => $t) : ?>
+        if (empty($_GET['type'])) :
+            foreach ($tests as $type => $t) : ?>
     <table class='view'>
         <tr>
             <td><b>Test Type</b></td>
-            <td><?php echo $t["Type"]; ?></td>
-        </tr>
-        <tr>
-            <td><b>Version Number</b></td>
-            <td><?php echo $version; ?></td>
+            <td><?php echo ucwords($type); ?></td>
         </tr>
         <tr>
             <td><b>Date Created</b></td>
@@ -35,7 +31,7 @@
         </tr>
         <tr>
             <td><b>View Test</b></td>
-            <td><a href="?id=<?php echo $version; ?>" target="_self">View This Test</a></td>
+            <td><a href="?type=<?php echo $type; ?>" target="_self">View This Test</a></td>
         </tr>
     </table>
     <br>
@@ -44,17 +40,13 @@
 <?php 
             endforeach; 
         else : 
-            $version = $_GET['id'];
-            $t = $tests[$version];    
+            $type = $_GET['type'];
+            $t = $tests[$type];    
 ?>
         <table class='view'>
         <tr>
             <td><b>Test Type</b></td>
-            <td><?php echo $t["Type"]; ?></td>
-        </tr>
-        <tr>
-            <td><b>Version Number</b></td>
-            <td><?php echo $version; ?></td>
+            <td><?php echo ucwords($type); ?></td>
         </tr>
         <tr>
             <td><b>Date Created</b></td>
@@ -62,8 +54,8 @@
         </tr>
         <tr>
             <td><b>Delete Test</b></td>
-            <td><a id='delete' href="?del=<?php echo $version; ?>" target="_self" 
-                onclick="return confirm('Are you sure you want to delete this test version?');">Delete This Test</a></td>
+            <td><a id='delete' href="?del=<?php echo $type; ?>" target="_self" 
+                onclick="return confirm('Are you sure you want to delete this test?');">Delete This Test</a></td>
         </tr>
     </table>
     <table class='view'>

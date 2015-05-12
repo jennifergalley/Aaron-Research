@@ -15,7 +15,6 @@
     } elseif (!empty($_POST['submit'])) {
         $json = decodeJSON($imageTests);
         $test = array ();
-        $test["Type"] = $_SESSION['type'];
         $test["Date"] = date("m-d-y h:i:s a");
         $test["Switch"]["after"] = $_SESSION['type'] == 'practice' ? 12 : 40;
         $test["Switch"]["text"] = $_POST['switch_text'];
@@ -40,7 +39,7 @@
         }
         $test["Block"] = $blocks;
         $test["Right Answers"] = $correct;
-        $json[] = $test;
+        $json[$_SESSION['type']] = $test;
         encodeJSON ($imageTests, $json);
         $error = "Test Created!";
         $count++; 

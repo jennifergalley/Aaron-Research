@@ -1,7 +1,7 @@
 <?php 
     session_start();
     require_once ("../config/global.php");
-    if (empty($_POST["version"])) {
+    if (empty($_POST["name"])) {
         require_once ($header);
         logout ();
     } else { ?>
@@ -17,17 +17,13 @@
         echo "<h2>Error - no tests available.</h2>";
     else : ?>
     <!-- Name Submit and Start Test -->
-    <h1>Test 1</h1>
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); if (!empty($_GET['all'])) echo "?all=true"; ?>">
+    <?php if (isset($_GET["all"])) : ?>
+        <h1>All Tests</h1>
+    <?php else : ?>
+        <h1>Test 1</h1>
+    <?php endif; ?>
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); if (isset($_GET['all'])) echo "?all"; ?>">
         <table class='form'>
-            <tr>
-                <td><label for="version">Test Version:</label></td>
-                <td><select required name="version">
-                    <?php foreach ($test as $num => $test) : ?>
-                        <option value="<?php echo $num; ?>"><?php echo $num; ?></option>
-                    <?php endforeach; ?>
-                </select></td>
-            </tr>
             <tr>
                 <td><label for="name">Please enter your name:</label></td>
                 <td><input required type="text" name="name"></td>
@@ -44,9 +40,10 @@
     endif; ?>
 
 <!-- Populate Test -->
-<?php if (!empty($_POST["version"])) : 
+<?php if (!empty($_POST["name"])) : 
     $test = decodeJSON ($soundTests);  
-    $test = $test[$_POST['version']];
+    $type = "test"; //change this
+    $test = $test[$type];
 ?>
 
 <!-- Tone Element -->
@@ -89,7 +86,6 @@
         echo $arr;
     ?>];
     var participant = "<?php echo $_POST['name']; ?>";
-    var testVersion = "<?php echo $_POST['version']; ?>";
     var tones = [ <?php 
         $j = 1;
         foreach ($test["Block"] as $b => $block) {
@@ -103,7 +99,7 @@
             $j++;
         }
     ?> ];
-    var all = <?php echo !empty($_GET['all']) ? 1 : 0; ?>;
+    var all = <?php echo isset($_GET['all']) ? 1 : 0; ?>;
 </script>
 
 <!-- Javascript Functions -->
@@ -112,7 +108,7 @@
 
 <?php 
     endif; 
-    if (empty($_POST["version"])) {
+    if (empty($_POST["name"])) {
         require_once ($footer);
     }
 ?>
