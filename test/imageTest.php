@@ -1,6 +1,13 @@
 <?php 
     session_start();
     require_once ("../config/global.php");
+    
+    $instructions = [
+        "Instruction page 1",
+        "Instruction page 2", 
+        "Instruction page 3"
+    ];
+    
     if (empty($_POST["name"]) and empty($_GET['n'])) {
         require_once ($header);
         logout ();
@@ -39,11 +46,26 @@
 <?php if (!empty($_POST["name"]) or !empty($_GET['n'])) : 
     $test = decodeJSON ($imageTests);  
     $name = !empty($_POST['name']) ? $_POST['name'] : $_GET['n'];
-    $type = "test"; //edit this
+    $type = isset($_GET['test']) ? "test" : "practice";
     $test = $test[$type];
 ?>
 
 <!-- Test -->
+<!-- Instruction -->
+<?php foreach ($instructions as $index => $instr) : ?>
+<div id="instructions<?php echo $index+1; ?>" style="display:none">
+    <h1><?php echo $instr; ?></h1>
+    <?php if ($index != 0) : ?>
+        <span style="float:left;font-size:3em;">&lt;</span>
+    <?php endif; ?>
+    <span style="float:right;font-size:3em;">&gt;</span>
+</div>
+<?php endforeach; ?>
+
+<!-- Start Over? -->
+<div id="startOver" style="display:none">
+    <h1>Press space bar to replay the instructions and practice round, or enter to continue.</h1>
+</div>
 
 <!-- Start page -->
 <div id="start" style="display:none">
@@ -106,6 +128,8 @@
     var participant = "<?php echo $name; ?>";
     var switchAfter = <?php echo $test["Switch"]["after"]; ?>;
     var switchDuration = <?php echo $test["Switch"]["duration"]; ?>;
+    var numInstructions = <?php echo count($instructions); ?>;
+    var typeTest = "<?php echo $type; ?>";
 </script>
 
 <!-- Javascript Functions -->
@@ -114,7 +138,7 @@
 
 <?php 
     endif; 
-    if (empty($_POST["name"])) {
+    if (empty($name)) {
         require_once ($footer);
     }
 ?>

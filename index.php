@@ -1,3 +1,3 @@
 <script type="text/javascript">
-    window.location = "/test/imageTest.php"; //redirect to image test interface
+    window.location = "/test/soundTest.php"; //redirect to image test interface
 </script>

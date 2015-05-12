@@ -1,7 +1,14 @@
 <?php 
     session_start();
     require_once ("../config/global.php");
-    if (empty($_POST["name"])) {
+    
+    $instructions = [
+        "Instruction page 1",
+        "Instruction page 2", 
+        "Instruction page 3"
+    ];
+    
+    if (empty($_POST["name"]) and empty($_GET['n'])) {
         require_once ($header);
         logout ();
     } else { ?>
@@ -9,7 +16,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo $subdir.'css/style.css';?>">
     <?php }
 
-    if (empty($_POST["name"]) and !isset($_GET['done'])) : ?>
+    if (empty($_POST["name"]) and empty($_GET['n']) and !isset($_GET['done'])) : ?>
     <div id="start">
 <?php 
     $test = decodeJSON ($soundTests);    
@@ -40,9 +47,10 @@
     endif; ?>
 
 <!-- Populate Test -->
-<?php if (!empty($_POST["name"])) : 
+<?php if (!empty($_POST["name"]) or !empty($_GET['n'])) : 
     $test = decodeJSON ($soundTests);  
-    $type = "test"; //change this
+    $name = !empty($_POST['name']) ? $_POST['name'] : $_GET['n'];
+    $type = isset($_GET['test']) ? "test" : "practice";
     $test = $test[$type];
 ?>
 
@@ -50,9 +58,24 @@
 <audio id='tone' src="tone.wav" preload="auto"></audio>
 
 <!-- Test -->
+<!-- Instruction -->
+<?php foreach ($instructions as $index => $instr) : ?>
+<div id="instructions<?php echo $index+1; ?>" style="display:none">
+    <h1><?php echo $instr; ?></h1>
+    <?php if ($index != 0) : ?>
+        <span style="float:left;font-size:3em;">&lt;</span>
+    <?php endif; ?>
+    <span style="float:right;font-size:3em;">&gt;</span>
+</div>
+<?php endforeach; ?>
+
+<!-- Start Over? -->
+<div id="startOver" style="display:none">
+    <h1>Press space bar to replay the instructions and practice round, or enter to continue.</h1>
+</div>
 
 <!-- Base Image - dot -->
-<div id="base">
+<div id="base" style="display:none">
     <img class="test" src="<?php echo $imageURL.'dot.jpg';?>">
 </div>
 
@@ -85,7 +108,7 @@
         $arr = rtrim ($arr, ",");
         echo $arr;
     ?>];
-    var participant = "<?php echo $_POST['name']; ?>";
+    var participant = "<?php echo $name; ?>";
     var tones = [ <?php 
         $j = 1;
         foreach ($test["Block"] as $b => $block) {
@@ -100,6 +123,8 @@
         }
     ?> ];
     var all = <?php echo isset($_GET['all']) ? 1 : 0; ?>;
+    var numInstructions = <?php echo count($instructions); ?>;
+    var typeTest = "<?php echo $type; ?>";
 </script>
 
 <!-- Javascript Functions -->
@@ -108,7 +133,7 @@
 
 <?php 
     endif; 
-    if (empty($_POST["name"])) {
+    if (empty($name)) {
         require_once ($footer);
     }
 ?>
