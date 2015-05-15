@@ -146,149 +146,237 @@
         }
     },
     "practice": {
-        "Date": "05-05-15 08:44:55 pm",
+        "Date": "05-14-15 09:25:19 pm",
         "Switch": {
-            "after": "8",
-            "text": "The new target is white.",
-            "duration": "3000"
+            "after": 12,
+            "text": "The new target is gray.",
+            "duration": 3000
         },
         "Block": {
             "1": {
                 "1": {
                     "left": {
-                        "character": "A",
+                        "character": "6",
                         "color": "purple"
                     },
                     "right": {
-                        "character": "B",
-                        "color": "white"
+                        "character": "9",
+                        "color": "gray"
                     }
                 },
                 "2": {
                     "left": {
-                        "character": "C",
-                        "color": "green"
+                        "character": "4",
+                        "color": "gray"
                     },
                     "right": {
-                        "character": "E",
-                        "color": "white"
+                        "character": "7",
+                        "color": "purple"
                     }
                 },
                 "3": {
                     "left": {
-                        "character": "D",
-                        "color": "purple"
+                        "character": "6",
+                        "color": "gray"
                     },
                     "right": {
-                        "character": "F",
-                        "color": "white"
+                        "character": "7",
+                        "color": "purple"
                     }
                 },
                 "4": {
                     "left": {
-                        "character": "1",
+                        "character": "5",
                         "color": "purple"
                     },
                     "right": {
-                        "character": "2",
-                        "color": "white"
+                        "character": "8",
+                        "color": "gray"
                     }
                 },
                 "5": {
                     "left": {
-                        "character": "3",
-                        "color": "green"
+                        "character": "7",
+                        "color": "gray"
                     },
                     "right": {
-                        "character": "4",
-                        "color": "white"
+                        "character": "8",
+                        "color": "purple"
                     }
                 },
                 "6": {
                     "left": {
-                        "character": "6",
-                        "color": "white"
+                        "character": "5",
+                        "color": "purple"
                     },
                     "right": {
-                        "character": "3",
-                        "color": "green"
+                        "character": "8",
+                        "color": "gray"
                     }
                 },
                 "7": {
                     "left": {
-                        "character": "R",
-                        "color": "white"
+                        "character": "7",
+                        "color": "purple"
                     },
                     "right": {
-                        "character": "T",
-                        "color": "green"
+                        "character": "8",
+                        "color": "gray"
                     }
                 },
                 "8": {
                     "left": {
-                        "character": "D",
-                        "color": "purple"
+                        "character": "4",
+                        "color": "gray"
                     },
                     "right": {
-                        "character": "E",
-                        "color": "white"
+                        "character": "9",
+                        "color": "purple"
                     }
                 },
                 "9": {
                     "left": {
-                        "character": "E",
-                        "color": "purple"
+                        "character": "8",
+                        "color": "gray"
                     },
                     "right": {
-                        "character": "R",
-                        "color": "green"
+                        "character": "3",
+                        "color": "purple"
                     }
                 },
                 "10": {
-                    "left": {
-                        "character": "E",
-                        "color": "white"
-                    },
-                    "right": {
-                        "character": "F",
-                        "color": "purple"
-                    }
-                },
-                "11": {
-                    "left": {
-                        "character": "E",
-                        "color": "purple"
-                    },
-                    "right": {
-                        "character": "F",
-                        "color": "white"
-                    }
-                },
-                "12": {
                     "left": {
                         "character": "3",
                         "color": "purple"
                     },
                     "right": {
+                        "character": "8",
+                        "color": "gray"
+                    }
+                },
+                "11": {
+                    "left": {
+                        "character": "2",
+                        "color": "purple"
+                    },
+                    "right": {
+                        "character": "7",
+                        "color": "gray"
+                    }
+                },
+                "12": {
+                    "left": {
+                        "character": "7",
+                        "color": "purple"
+                    },
+                    "right": {
+                        "character": "8",
+                        "color": "gray"
+                    }
+                },
+                "13": {
+                    "left": {
+                        "character": "8",
+                        "color": "gray"
+                    },
+                    "right": {
+                        "character": "5",
+                        "color": "DarkGreen"
+                    }
+                },
+                "14": {
+                    "left": {
                         "character": "4",
-                        "color": "white"
+                        "color": "DarkGreen"
+                    },
+                    "right": {
+                        "character": "9",
+                        "color": "gray"
+                    }
+                },
+                "15": {
+                    "left": {
+                        "character": "6",
+                        "color": "gray"
+                    },
+                    "right": {
+                        "character": "9",
+                        "color": "DarkGreen"
+                    }
+                },
+                "16": {
+                    "left": {
+                        "character": "3",
+                        "color": "DarkGreen"
+                    },
+                    "right": {
+                        "character": "8",
+                        "color": "gray"
+                    }
+                },
+                "17": {
+                    "left": {
+                        "character": "2",
+                        "color": "DarkGreen"
+                    },
+                    "right": {
+                        "character": "9",
+                        "color": "gray"
+                    }
+                },
+                "18": {
+                    "left": {
+                        "character": "6",
+                        "color": "DarkGreen"
+                    },
+                    "right": {
+                        "character": "7",
+                        "color": "gray"
+                    }
+                },
+                "19": {
+                    "left": {
+                        "character": "6",
+                        "color": "gray"
+                    },
+                    "right": {
+                        "character": "3",
+                        "color": "DarkGreen"
+                    }
+                },
+                "20": {
+                    "left": {
+                        "character": "9",
+                        "color": "DarkGreen"
+                    },
+                    "right": {
+                        "character": "6",
+                        "color": "gray"
                     }
                 }
             }
         },
         "Right Answers": {
-            "1": "right",
-            "2": "left",
-            "3": "left",
-            "4": "left",
+            "1": "left",
+            "2": "right",
+            "3": "right",
+            "4": "right",
             "5": "left",
             "6": "right",
             "7": "right",
             "8": "right",
-            "9": "left",
+            "9": "right",
             "10": "right",
-            "11": "right",
-            "12": "right"
+            "11": "left",
+            "12": "right",
+            "13": "left",
+            "14": "right",
+            "15": "left",
+            "16": "left",
+            "17": "right",
+            "18": "right",
+            "19": "left",
+            "20": "left"
         }
     }
 }

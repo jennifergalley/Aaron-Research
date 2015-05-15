@@ -10,7 +10,7 @@
     } 
 ?>
 
-<a href="<?php if (!empty($_GET['id'])) echo 'viewImageResults.php'; else echo 'admin.php'; ?>" target="_self" class="back"><?php if (!empty($_GET['id'])) echo 'Test Results'; else echo 'Admin'; ?> &lt;&lt;</a>
+<a href="<?php if (isset($_GET['id'])) echo 'viewImageResults.php'; else echo 'admin.php'; ?>" target="_self" class="back"><?php if (isset($_GET['id'])) echo 'Test Results'; else echo 'Admin'; ?> &lt;&lt;</a>
         
 <h1>Participant Results</h1>
 

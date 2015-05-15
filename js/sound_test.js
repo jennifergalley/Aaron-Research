@@ -28,9 +28,9 @@ function showElem1 () {
             }, tones[j-1]); //delay in ms
         }
         j = j+1;
-        myTimeout = setTimeout(function() { //timeout after 2 seconds, call response with null input
+        myTimeout = setTimeout(function() { //timeout, call response with null input
             timeout ();
-        }, 1000); //timeout after 1 second
+        }, 750); //timeout
     }, 500); //half a second between image + tone trials - ask aaron about this delay
 }
 
@@ -84,7 +84,11 @@ function response (e) {
         } else {
             hide("startOver");
             if (keycode == 32) { //spacebar - redo instructions 
-                window.location = "soundTest.php?n=" + participant; //start over
+                var url = "soundTest.php?n=" + participant;
+                if (all) {
+                    url += "&all";
+                }
+                window.location = url; //start over
             } else if (keycode == 13) { //enter - continue
                 setCookie ("instr", numInstructions+1, 1); //avoid instructions
                 startAgain (); //start test
