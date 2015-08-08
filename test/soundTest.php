@@ -3,9 +3,13 @@
     require_once ("../config/global.php");
     
     $instructions = [
-        "Instruction page 1",
-        "Instruction page 2", 
-        "Instruction page 3"
+        "img19.png",
+        "img20.png", 
+        "img21.png",
+        "img22.png",
+        "img23.png",
+        "img24.png",
+        "img25.png"
     ];
     
     if (empty($_POST["name"]) and empty($_GET['n'])) {
@@ -61,7 +65,7 @@
 <!-- Instruction -->
 <?php foreach ($instructions as $index => $instr) : ?>
 <div id="instructions<?php echo $index+1; ?>" style="display:none">
-    <h1><?php echo $instr; ?></h1>
+    <img class="instr" src="<?php echo $imageURL.$instr;?>">
     <?php if ($index != 0) : ?>
         <span style="float:left;font-size:3em;">&lt;</span>
     <?php endif; ?>
