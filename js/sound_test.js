@@ -2,6 +2,12 @@ function playTone() {
     document.getElementById("tone").play(); //play the sound
 }
 
+function showInstruction() {
+    instructionIndex = getCookie("instructionIndex"); //get instruction index
+    show("instruction" + instructionIndex); //show the next instruction
+    allowResponses(); //allow them to navigate
+}
+
 var myTimeout;
 function showTestImage() {
     setTimeout(function() {
@@ -13,10 +19,10 @@ function showTestImage() {
         allowResponses(); //allow a response
         
         //play sound
-        if (tones[toneIndex-1] != "") { //if not empty
+        if (tones[toneIndex] != "") { //if not empty
             setTimeout(function() { //delay tone
                 playTone(); //play tone
-            }, tones[toneIndex-1]); //delay in ms
+            }, tones[toneIndex]); //delay in ms
         }
         
         toneIndex++; //increment global tone index
@@ -62,7 +68,42 @@ function response(e) {
         
         //if cycling through instructions
         if (instructionIndex <= numInstructions) { 
-            handleInstructions(userResponse);
+            hide("instruction" + instructionIndex.toString()); //hide instruction
+            
+            //if it's the last instruction
+            if (instructionIndex == numInstructions) { 
+                //If they hit spacebar, continue to practice test
+                if (userResponse == spacebar) { //spacebar
+                    increment("instructionIndex"); //increment instruction index
+                    
+                    setTimeout(function() {
+                        showQuestion();
+                    }, 2000); //pause for 2s after they hit spacebar
+                } else if (userResponse == left) { //left
+                    if (instructionIndex > 1) { //can't go left any more than 1
+                        decrement("instructionIndex"); //decrement instruction index to go back one page
+                    } //else, do nothing - stay at this instruction
+                    showInstruction(); //show instruction
+                } else { //invalid key pressed
+                    showInstruction(); //continue to allow a correct response
+                }
+            }
+            //If the user pressed left arrow
+            else if (userResponse == left) { //left
+                if (instructionIndex > 1) { //can't go left any more than 1
+                    decrement("instructionIndex"); //decrement instruction index to go back one page
+                } //else, do nothing - stay at this instruction
+                showInstruction(); //show instruction
+            }
+            //If the user pressed right arrow
+            else if (userResponse == right) { //right
+                increment("instructionIndex"); //increment the instruction index
+                showInstruction(); //show instruction
+            }
+            //Anything else pressed, do nothing
+            else { //invalid key pressed
+                showInstruction(); //allow a correct response
+            }
             
             //Don't do anything else, we're just navigating instructions
             return;
@@ -74,9 +115,9 @@ function response(e) {
     
     //If the user pressed enter from the pause between blocks screen
     if (pause.offsetParent !== null && userResponse == enter) { //enter
-        setCookie("imageIndex", 1, 1); //reset the question index to 1
+        reset("imageIndex"); //reset the question index to 1
         imageIndex = 1; //set the question index to 1
-        increment("blockIndex", blockIndex); //increment the block index
+        increment("blockIndex"); //increment the block index
         hide("pause"); //hide the pause between blocks screen
     } else {
         //It was a response to a test image
@@ -102,11 +143,13 @@ function response(e) {
         else {
             //If it was the last question in that block, show the pause between blocks page
             if (imageIndex == numQuestions[blockIndex-1]) { //last question in block
+                reset("imageIndex"); //reset image index
+                increment("blockIndex"); //increment the block index
                 showPause(); //show the pause between blocks page
                 return; //Don't do anything else
             }
         }
-        increment("imageIndex", imageIndex); //increment image index
+        increment("imageIndex"); //increment image index
     }
     
     //pause, then show next image
@@ -117,7 +160,7 @@ function response(e) {
 
 var start, end; //time variables
 var imageIndex, blockIndex, instructionIndex; //index variables
-var toneIndex = 1; //global tone index
+var toneIndex = 0; //global tone index
 
 //Keycode legend
 var spacebar = 32;
@@ -125,12 +168,12 @@ var left = 37;
 var right = 39;
 var enter = 13;
 
-setCookie("imageIndex", 1, 1); //set image index initially to 1
-setCookie("blockIndex", 1, 1); //set block index initially to 1
+reset("imageIndex"); //set image index initially to 1
+reset("blockIndex"); //set block index initially to 1
 
 //If this is a practice test
 if (typeTest == "practice") { 
-    setCookie("instructionIndex", 1, 1); //set instruction index initially to 1
+    reset("instructionIndex"); //set instruction index initially to 1
     showInstruction(); //show the first instruction
 }
 

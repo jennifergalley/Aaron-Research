@@ -103,14 +103,14 @@
                     <!-- Instructions Image -->
                     <img src="<?php echo $imageURL.$instr;?>">
                     
-                    <!-- Right Arrow -->
+                    <!-- Left Arrow -->
                     <?php 
                         if ($index != 0) : ?>
                             <span style="float:left;font-size:3em;">&lt;</span>
                     <?php 
                         endif; ?>
                     
-                    <!-- Left Arrow -->
+                    <!-- Right Arrow -->
                     <?php 
                         if ($index+1 != count($instructions)) : ?>
                             <span style="float:right;font-size:3em;">&gt;</span>
@@ -181,12 +181,12 @@
             var name = "<?php echo $name; ?>";
             
             //Tones to play
-            var tones = [ <?php 
-                $j = 1;
+            var tones = [<?php 
+                $blockIndex = 1;
                 
                 //For each block
                 foreach ($test["Block"] as $b => $block) {
-                    $i = 1;
+                    $questionIndex = 1;
                     
                     //For each question
                     foreach ($block as $question) {
@@ -194,21 +194,21 @@
                         echo '"'.$question['tone'].'"';
                         
                         //if there is a next question
-                        if (array_key_exists($i+1, $block)) {
+                        if (array_key_exists($questionIndex+1, $block)) {
                             echo ", ";
                         }
                         
-                        $i++;
+                        $questionIndex++;
                     }
                     
                     //If there is a next block
-                    if (array_key_exists ($j+1, $test["Block"])) {
+                    if (array_key_exists ($blockIndex+1, $test["Block"])) {
                         echo ", ";
                     }
                     
-                    $j++;
+                    $blockIndex++;
                 }
-            ?> ];
+            ?>];
             
             //Number of instruction pages
             var numInstructions = <?php echo count($instructions); ?>;

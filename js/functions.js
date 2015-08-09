@@ -43,12 +43,18 @@
         }
     }
     
-    function increment (c, i) {
+    function increment(c) {
+        var i = +(getCookie(c));
         setCookie (c, i+1, 1); //increment c
     }
     
-    function decrement (c, i) {
+    function decrement (c) {
+        var i = +(getCookie(c));
         setCookie (c, i-1, 1); //decrement c
+    }
+    
+    function reset(c) {
+        setCookie(c, 1, 1);
     }
     
     function allowResponses () {
@@ -67,54 +73,6 @@
         }
         return keycode;
     }
-    
-    function showInstruction() {
-        instructionIndex = getCookie("instructionIndex"); //get instruction index
-        show("instruction" + instructionIndex); //show the next instruction
-        allowResponses(); //allow them to navigate
-    }
-
-    function handleInstructions(userResponse) {
-        instructionIndex = +(getCookie("instructionIndex")); //get the instructions index
-        
-        hide("instruction" + instructionIndex.toString()); //hide instruction
-        
-        //if it's the last instruction
-        if (instructionIndex == numInstructions) { 
-            //If they hit spacebar, continue to practice test
-            if (userResponse == spacebar) { //spacebar
-                increment("instructionIndex", instructionIndex); //increment instruction index
-                
-                setTimeout(function() {
-                    showQuestion();
-                }, 2000); //pause for 2s after they hit spacebar
-            } else if (userResponse == left) { //left
-                if (instructionIndex > 1) { //can't go left any more than 1
-                    decrement("instructionIndex", instructionIndex); //decrement instruction index to go back one page
-                } //else, do nothing - stay at this instruction
-                showInstruction(); //show instruction
-            } else { //invalid key pressed
-                showInstruction(); //continue to allow a correct response
-            }
-        }
-        //If the user pressed left arrow
-        else if (userResponse == left) { //left
-            if (instructionIndex > 1) { //can't go left any more than 1
-                decrement("instructionIndex", instructionIndex); //decrement instruction index to go back one page
-            } //else, do nothing - stay at this instruction
-            showInstruction(); //show instruction
-        }
-        //If the user pressed right arrow
-        else if (userResponse == right) { //right
-            increment("instructionIndex", instructionIndex); //increment the instruction index
-            showInstruction(); //show instruction
-        }
-        //Anything else pressed, do nothing
-        else { //invalid key pressed
-            showInstruction(); //allow a correct response
-        }
-    }
-    
     
     function saveResults(saveLocation) {
         //If it was the real test, save the results

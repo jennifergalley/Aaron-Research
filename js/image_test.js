@@ -7,6 +7,14 @@ function showQuestion() {
     }, 250); //hide base image after 250 ms
 }
 
+function showInstruction() {
+    instructionIndex = getCookie("instructionIndex"); //get instruction index
+    blockIndex = +(getCookie("blockIndex"));
+    var evenOdd = blockIndex != 1 && blockIndex % 2 == 0 ? "Even" : "Odd";
+    show("instruction" + evenOdd + instructionIndex); //show the next instruction
+    allowResponses(); //allow them to navigate
+}
+
 function showTestImage() {
     imageIndex = getCookie("imageIndex");
     blockIndex = getCookie("blockIndex");
@@ -17,6 +25,18 @@ function showTestImage() {
 }
 
 function nextQuestion() {
+    imageIndex = +(getCookie("imageIndex"));
+    blockIndex = +(getCookie("blockIndex"));
+    
+    //If it's the last question in the block
+    if (imageIndex == numQuestions[blockIndex - 1]) {
+        increment("blockIndex"); //increment the block index
+        reset("imageIndex"); //reset image index
+        setCookie("onInstructions", "true", 1); //reset on instructions flag
+        showInstruction();
+        return; //don't do anything else
+    }
+    
     var question = imageIndex - (60 * (blockIndex - 1)); //question number in the current block (out of 60)
     
     //If we're switching targets
@@ -26,11 +46,11 @@ function nextQuestion() {
         setTimeout(function () {
             hide("switch"); //hide switch text
             //Don't factor out these two lines of code to after the if statement - they need to wait for the switch duration
-            increment("imageIndex", imageIndex); //increment imageIndex
+            increment("imageIndex"); //increment imageIndex
             showPause();
         }, switchDuration); //hide after the specified number of milliseconds
     } else {
-        increment("imageIndex", imageIndex); //increment imageIndex 
+        increment("imageIndex"); //increment imageIndex 
         showPause();
     }
 }
@@ -54,8 +74,48 @@ function response(e) {
     instructionIndex = +(getCookie("instructionIndex")); //get the instructions index
 
     //if cycling through instructions
-    if (instructionIndex <= numInstructions) {
-        handleInstructions(userResponse);
+    if (getCookie("onInstructions") == "true") {
+        instructionIndex = +(getCookie("instructionIndex")); //get the instructions index
+        var evenOdd = blockIndex != 1 && blockIndex % 2 == 0 ? "Even" : "Odd";
+        
+        hide("instruction" + evenOdd + instructionIndex.toString()); //hide instruction
+        
+        //if it's the last instruction
+        if (instructionIndex == numInstructions) { 
+            //If they hit spacebar, continue to practice test
+            if (userResponse == spacebar) { //spacebar
+                increment("instructionIndex"); //increment instruction index
+                
+                setTimeout(function () {
+                    reset("instructionIndex"); //reset instruction index
+                    setCookie("onInstructions", "false", 1); //reset instructions flag
+                    showQuestion();
+                }, 2000); //pause for 2s after they hit spacebar
+            } else if (userResponse == left) { //left
+                if (instructionIndex > 1) { //can't go left any more than 1
+                    decrement("instructionIndex"); //decrement instruction index to go back one page
+                } //else, do nothing - stay at this instruction
+                showInstruction(); //show instruction
+            } else { //invalid key pressed
+                showInstruction(); //continue to allow a correct response
+            }
+        }
+        //If the user pressed left arrow
+        else if (userResponse == left) { //left
+            if (instructionIndex > 1) { //can't go left any more than 1
+                decrement("instructionIndex"); //decrement instruction index to go back one page
+            } //else, do nothing - stay at this instruction
+            showInstruction(); //show instruction
+        }
+        //If the user pressed right arrow
+        else if (userResponse == right) { //right
+            increment("instructionIndex"); //increment the instruction index
+            showInstruction(); //show instruction
+        }
+        //Anything else pressed, do nothing
+        else { //invalid key pressed
+            showInstruction(); //allow a correct response
+        }
         
         //Don't do anything else, we're just navigating instructions
         return;
@@ -79,16 +139,10 @@ function response(e) {
             //Done with practice test - show "Notify Researcher" page
             else {
                 show("practiceDone"); //show "Notify Researcher" page
-                return; //Done with test, don't do anything else
             }
-        }
-
-        //If it was not the last question, continue the test
-        else {
-            if (imageIndex == numQuestions[blockIndex-1]) { //last question in this block
-                return; //don't do anything else
-            }
-        }
+            
+            return; //Done with test, don't do anything else
+        }     
         
         //If they got the question wrong
         if ((userResponse == left && correctAnswers[imageIndex - 1] != "left")
@@ -123,9 +177,10 @@ var spacebar = 32;
 var left = 37;
 var right = 39;
 
-setCookie("imageIndex", 1, 1); //set image index initially to 1
-setCookie("blockIndex", 1, 1); //set block index initially to 1
-setCookie("instructionIndex", 1, 1); //set instruction index initially to 1
+reset("imageIndex"); //set image index initially to 1
+reset("blockIndex"); //set block index initially to 1
+reset("instructionIndex"); //set instruction index initially to 1
+setCookie("onInstructions", "true", 1); //set on instructions flag initially to true
 
 showInstruction(); //show the first instruction
 

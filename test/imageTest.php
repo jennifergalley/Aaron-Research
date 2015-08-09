@@ -2,10 +2,30 @@
     session_start();
     require_once ("../config/global.php");
     
-    $instructions = [
-        "Instruction page 1",
-        "Instruction page 2",
-        "Instruction page 3"
+    $instructionsOdd = [
+        "img1.png",
+        "img2.png",
+        "img3.png",
+        "img4.png",
+        "img5.png",
+        "img6.png",
+        "img7.png",
+        "img8.png",
+        "img9.png",
+        "img25.png"
+    ];
+    
+    $instructionsEven = [
+        "img10.png",
+        "img11.png",
+        "img12.png",
+        "img13.png",
+        "img14.png",
+        "img15.png",
+        "img16.png",
+        "img17.png",
+        "img18.png",
+        "img25.png"
     ];
     
     //If no test selected
@@ -23,7 +43,7 @@
     endif;
     
     //If no test selected
-    if (empty($_POST["name"])) : ?>
+    if (empty($_POST["name"]) and !isset($_GET['done'])) : ?>
        
         <div id="start">
         
@@ -85,23 +105,45 @@
         endif; 
      
         //Instructions
-        foreach ($instructions as $index => $instr) : ?>
-            <div id="instruction<?php echo $index+1; ?>" style="display:none">
+        foreach ($instructionsEven as $index => $instr) : ?>
+            <div id="instructionEven<?php echo $index+1; ?>" style="display:none">
                 
                 <!-- Instructions Image -->
-                <h1><?php echo $instr; ?></h1>
-                <!--<img src="<?php echo $imageURL.$instr;?>">-->
+                <img src="<?php echo $imageURL.$instr;?>">
                 
-                <!-- Right Arrow -->
+                <!-- Left Arrow -->
                 <?php 
                     if ($index != 0) : ?>
                         <span style="float:left;font-size:3em;">&lt;</span>
                 <?php 
                     endif; ?>
                 
+                <!-- Right Arrow -->
+                <?php 
+                    if ($index+1 != count($instructionsEven)) : ?>
+                        <span style="float:right;font-size:3em;">&gt;</span>
+                <?php 
+                    endif; ?>
+            </div>
+    <?php 
+        endforeach; 
+        
+        foreach ($instructionsOdd as $index => $instr) : ?>
+            <div id="instructionOdd<?php echo $index+1; ?>" style="display:none">
+                
+                <!-- Instructions Image -->
+                <img src="<?php echo $imageURL.$instr;?>">
+                
                 <!-- Left Arrow -->
                 <?php 
-                    if ($index+1 != count($instructions)) : ?>
+                    if ($index != 0) : ?>
+                        <span style="float:left;font-size:3em;">&lt;</span>
+                <?php 
+                    endif; ?>
+                
+                <!-- Right Arrow -->
+                <?php 
+                    if ($index+1 != count($instructionsOdd)) : ?>
                         <span style="float:right;font-size:3em;">&gt;</span>
                 <?php 
                     endif; ?>
@@ -112,7 +154,7 @@
         <!-- Done With Practice Test Page -->
         <div id="practiceDone" style="display:none">
             <h1>Notify the researcher that you have completed the practice session.</h1>
-            <a href="http://aaron-landau.appspot.com/test/soundTest.php">Back to Test Selection</a>
+            <a href="http://aaron-landau.appspot.com/test/imageTest.php">Back to Test Selection</a>
         </div>
             
     <!-- Switch Screen -->
@@ -200,7 +242,7 @@
         var switchDuration = <?php echo $test["Switch"]["duration"]; ?>;
         
         //Number of instruction pages
-        var numInstructions = <?php echo count($instructions); ?>;
+        var numInstructions = <?php echo count($instructionsEven); ?>;
         
         //Type of test - practice or test
         var typeTest = "<?php echo $type; ?>";
