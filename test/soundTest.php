@@ -12,11 +12,13 @@
         "img25.png"
     ];
     
-    if (empty($_POST["name"]) and empty($_GET['n'])) :
+    // If no test selected
+    if (empty($_POST["name"])) :
     
         require_once ($header);
         logout ();
         
+    // If a test is selected
     else : ?>
     
         <!-- My Stylesheet -->
@@ -35,10 +37,14 @@
             <!-- Test Selection -->
             <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); if (isset($_GET['all'])) echo "?all"; ?>">
                 <table class='form'>
+
+                    <!-- Participant Name -->
                     <tr>
                         <td><label for="name">Please enter your name:</label></td>
                         <td><input required type="text" name="name"></td>
                     </tr>
+                    
+                    <!-- Test Selection -->
                     <tr>
                         <td></td>
                         <td>
@@ -49,7 +55,10 @@
                         </td>
                     </tr>
                 </table>
+                
                 <br>
+                
+                <!-- Submit Button -->
                 <input type="submit" name="start" value="Start">
             </form>
             
@@ -62,7 +71,7 @@
         
     endif; ?>
 
-<!-- Populate Test -->
+    <!-- Populate Test -->
 <?php 
     // If a test is selected
     if (!empty($_POST["start"])) : 
@@ -145,13 +154,13 @@
                     </div>
                     
             <?php 
-                endforeach; ?>
-        <?php 
+                endforeach; 
             endforeach; ?>
         
         
         <!-- Javascript Variables -->
         <script type="text/javascript">
+        
             //Number of blocks
             var numBlocks = <?php echo count($test["Block"]); ?>;
             
