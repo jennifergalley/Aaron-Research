@@ -2,28 +2,10 @@
     session_start();
     require_once ("../config/global.php");
     
-    $instructions1 = [
-        "img1.png",
-        "img2.png",
-        "img3.png",
-        "img4.png",
-        "img5.png",
-        "img6.png",
-        "img7.png",
-        "img8.png",
-        "img9.png"
-    ];
-    
-    $instructions2 = [
-        "img10.png",
-        "img11.png",
-        "img12.png",
-        "img13.png",
-        "img14.png",
-        "img15.png",
-        "img16.png",
-        "img17.png",
-        "img18.png"
+    $instructions = [
+        "Instruction page 1",
+        "Instruction page 2",
+        "Instruction page 3"
     ];
     
     if (empty($_POST["name"]) and empty($_GET['n'])) {
@@ -72,7 +54,7 @@
 <!-- Instruction -->
 <?php foreach ($instructions as $index => $instr) : ?>
 <div id="instructions<?php echo $index+1; ?>" style="display:none">
-    <img class="instr" src="<?php echo $imageURL.$instr;?>">
+    <h1><?php echo $instr; ?></h1>
     <?php if ($index != 0) : ?>
         <span style="float:left;font-size:3em;">&lt;</span>
     <?php endif; ?>

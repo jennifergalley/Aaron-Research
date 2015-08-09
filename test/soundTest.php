@@ -12,131 +12,211 @@
         "img25.png"
     ];
     
-    if (empty($_POST["name"]) and empty($_GET['n'])) {
+    if (empty($_POST["name"]) and empty($_GET['n'])) :
+    
         require_once ($header);
         logout ();
-    } else { ?>
+        
+    else : ?>
+    
         <!-- My Stylesheet -->
         <link rel="stylesheet" type="text/css" href="<?php echo $subdir.'css/style.css';?>">
-    <?php }
+<?php
+    endif;
 
-    if (empty($_POST["name"]) and empty($_GET['n']) and !isset($_GET['done'])) : ?>
-    <div id="start">
+    // If no test selected
+    if (empty($_POST["name"]) and !isset($_GET['done'])) : ?>
+    
+        <div id="start">
+    
+            <!-- Heading -->
+            <h1>Test 1</h1>
+            
+            <!-- Test Selection -->
+            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); if (isset($_GET['all'])) echo "?all"; ?>">
+                <table class='form'>
+                    <tr>
+                        <td><label for="name">Please enter your name:</label></td>
+                        <td><input required type="text" name="name"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <select name="type">
+                                <option value="practice">Practice</option>
+                                <option value="test">Test</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <input type="submit" name="start" value="Start">
+            </form>
+            
+        </div>
 <?php 
-    $test = decodeJSON ($soundTests);    
-    if (empty($test)) :
-        echo "<h2>Error - no tests available.</h2>";
-    else : ?>
-    <!-- Name Submit and Start Test -->
-    <?php if (isset($_GET["all"])) : ?>
-        <h1>All Tests</h1>
-    <?php else : ?>
-        <h1>Test 1</h1>
-    <?php endif; ?>
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); if (isset($_GET['all'])) echo "?all"; ?>">
-        <table class='form'>
-            <tr>
-                <td><label for="name">Please enter your name:</label></td>
-                <td><input required type="text" name="name"></td>
-            </tr>
-        </table>
-        <br>
-        <input type="submit" name="start" value="Start">
-    </form>
-    </div>
-<?php endif;
-
     elseif (isset($_GET['done'])) : 
+    
+        // Thank them for participating 
         thankYou ();
+        
     endif; ?>
 
 <!-- Populate Test -->
-<?php if (!empty($_POST["name"]) or !empty($_GET['n'])) : 
-    $test = decodeJSON ($soundTests);  
-    $name = !empty($_POST['name']) ? $_POST['name'] : $_GET['n'];
-    $type = isset($_GET['test']) ? "test" : "practice";
-    $test = $test[$type];
-?>
-
-<!-- Tone Element -->
-<audio id='tone' src="tone.wav" preload="auto"></audio>
-
-<!-- Test -->
-<!-- Instruction -->
-<?php foreach ($instructions as $index => $instr) : ?>
-<div id="instructions<?php echo $index+1; ?>" style="display:none">
-    <img class="instr" src="<?php echo $imageURL.$instr;?>">
-    <?php if ($index != 0) : ?>
-        <span style="float:left;font-size:3em;">&lt;</span>
-    <?php endif; ?>
-    <span style="float:right;font-size:3em;">&gt;</span>
-</div>
-<?php endforeach; ?>
-
-<!-- Start Over? -->
-<div id="startOver" style="display:none">
-    <h1>Press space bar to replay the instructions and practice round, or enter to continue.</h1>
-</div>
-
-<!-- Base Image - dot -->
-<div id="base" style="display:none">
-    <img class="test" src="<?php echo $imageURL.'dot.jpg';?>">
-</div>
-
-<!-- Pause -->
-<div id="pause" style="display:none">
-    <h1>Press enter to continue</h1>
-</div>
-
 <?php 
-    //Populate Questions
-    foreach ($test["Block"] as $b => $block) :
-        $i = 1;
-        foreach ($block as $question) : ?>
+    // If a test is selected
+    if (!empty($_POST["start"])) : 
+        $name = $_POST['name']; //participant name
+        $type = $_POST['type']; //type of the test
+        
+        $test = decodeJSON ($soundTests); //decode the JSON tests
+        $test = $test[$type]; //get the correct test
+        
+        //If it doesn't exist
+        if (empty($test)) : ?>
+            <h2>Error - no test available.</h2>
+            <a href="http://aaron-landau.appspot.com/test/soundTest.php">Back to Test Selection</a>
+    <?php
+        endif; ?>
     
-        <!-- Image -->
-        <div id="<?php echo $b.".".$i++; ?>" style="display:none">
-            <img class="test" src="<?php echo $imageURL.$question['image'];?>">
+    <!-- Sound Element -->
+    <audio id='tone' src="tone.wav" preload="auto"></audio>
+    
+    <?php 
+        // If it's a practice test
+        if ($type == 'practice') : ?>
+        
+            <!-- Instructions -->
+        <?php
+            foreach ($instructions as $index => $instr) : ?>
+                <div id="instruction<?php echo $index+1; ?>" style="display:none">
+                    
+                    <!-- Instructions Image -->
+                    <img src="<?php echo $imageURL.$instr;?>">
+                    
+                    <!-- Right Arrow -->
+                    <?php 
+                        if ($index != 0) : ?>
+                            <span style="float:left;font-size:3em;">&lt;</span>
+                    <?php 
+                        endif; ?>
+                    
+                    <!-- Left Arrow -->
+                    <?php 
+                        if ($index+1 != count($instructions)) : ?>
+                            <span style="float:right;font-size:3em;">&gt;</span>
+                    <?php 
+                        endif; ?>
+                </div>
+        <?php 
+            endforeach; ?>
+        
+            <!-- Done With Practice Test Page -->
+            <div id="practiceDone" style="display:none">
+                <h1>Notify the researcher that you have completed the practice session.</h1>
+                <a href="http://aaron-landau.appspot.com/test/soundTest.php">Back to Test Selection</a>
+            </div>
+
+    <?php 
+        endif; ?>
+    
+        <!-- Base Image - dot -->
+        <div id="base" style="display:none">
+            <img class="test" src="<?php echo $imageURL.'dot.jpg';?>">
         </div>
-    <?php endforeach; ?>
-<?php endforeach; ?>
+        
+        <!-- Pause Between Blocks -->
+        <div id="pause" style="display:none">
+            <h1>Press enter to continue</h1>
+        </div>
+        
+        <!-- Test Images -->
+        <?php 
+            // For each block
+            foreach ($test["Block"] as $b => $block) :
+                $i = 1;
+                
+                // For each question
+                foreach ($block as $question) : ?>
 
-<!-- Specialized Variables -->
-<script type="text/javascript">
-    var blocks = <?php echo count($test["Block"]); ?>;
-    var numberQuestions = [<?php 
-        $arr = "";
-        foreach ($test["Block"] as $block) {
-            $arr .= count($block).",";
-        }
-        $arr = rtrim ($arr, ",");
-        echo $arr;
-    ?>];
-    var participant = "<?php echo $name; ?>";
-    var tones = [ <?php 
-        $j = 1;
-        foreach ($test["Block"] as $b => $block) {
-            $i = 1;
-            foreach ($block as $question) {
-                echo '"'.$question['tone'].'"';
-                if (array_key_exists($i+1, $block)) echo ", ";
-                $i++;
-            }
-            if (array_key_exists ($j+1, $test["Block"])) echo ", ";
-            $j++;
-        }
-    ?> ];
-    var all = <?php echo isset($_GET['all']) ? 1 : 0; ?>;
-    var numInstructions = <?php echo count($instructions); ?>;
-    var typeTest = "<?php echo $type; ?>";
-</script>
-
-<!-- Javascript Functions -->
-<script type="text/javascript" src="<?php echo $subdir.'js/functions.js';?>"></script>
-<script type="text/javascript" src="<?php echo $subdir.'js/sound_test.js';?>"></script>
+                    <!-- Image -->
+                    <div id="<?php echo $b.".".$i++; ?>" style="display:none">
+                        <img class="test" src="<?php echo $imageURL.$question['image'];?>">
+                    </div>
+                    
+            <?php 
+                endforeach; ?>
+        <?php 
+            endforeach; ?>
+        
+        
+        <!-- Javascript Variables -->
+        <script type="text/javascript">
+            //Number of blocks
+            var numBlocks = <?php echo count($test["Block"]); ?>;
+            
+            //Number of questions in each block
+            var numQuestions = [<?php 
+                $arr = "";
+                
+                //for each block get count of questions
+                foreach ($test["Block"] as $block) {
+                    $arr .= count($block).",";
+                }
+                
+                $arr = rtrim ($arr, ",");
+                echo $arr;
+            ?>];
+            
+            //Participant name
+            var name = "<?php echo $name; ?>";
+            
+            //Tones to play
+            var tones = [ <?php 
+                $j = 1;
+                
+                //For each block
+                foreach ($test["Block"] as $b => $block) {
+                    $i = 1;
+                    
+                    //For each question
+                    foreach ($block as $question) {
+                        //If there is a tone, then MS delay. Else, empty
+                        echo '"'.$question['tone'].'"';
+                        
+                        //if there is a next question
+                        if (array_key_exists($i+1, $block)) {
+                            echo ", ";
+                        }
+                        
+                        $i++;
+                    }
+                    
+                    //If there is a next block
+                    if (array_key_exists ($j+1, $test["Block"])) {
+                        echo ", ";
+                    }
+                    
+                    $j++;
+                }
+            ?> ];
+            
+            //Number of instruction pages
+            var numInstructions = <?php echo count($instructions); ?>;
+            
+            //Type of test - practice or test
+            var typeTest = "<?php echo $type; ?>";
+            
+        </script>
+        
+        <!-- Javascript Functions -->
+        <script type="text/javascript" src="<?php echo $subdir.'js/functions.js';?>"></script>
+        <script type="text/javascript" src="<?php echo $subdir.'js/sound_test.js';?>"></script>
 
 <?php 
     endif; 
+    
+    //If showing header at top, show footer at bottom
     if (empty($name)) {
         require_once ($footer);
     }

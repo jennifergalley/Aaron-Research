@@ -1,149 +1,188 @@
-function showInstructions() {
-    if (typeTest == "practice") {
-        var instr = getCookie("instr");
-        show("instructions" + instr);
-    } else {
-        show("startOver");
-    }
-    allowResponses();
+function showInstruction () {
+    instructionIndex = getCookie ("instructionIndex"); //get instruction index
+    show ("instruction" + instructionIndex); //show the next instruction
+    allowResponses(); //allow them to navigate
 }
 
 function playTone () {
-    document.getElementById("tone").play();
+    document.getElementById ("tone").play(); //play the sound
 }
 
 var myTimeout;
-function showElem1 () {
+function showTestImage () {
     setTimeout(function() {
-        var i = getCookie ("elem"); //get i
-        var b = getCookie ("block");
-        show (b+"."+i); //show
-        start = +new Date ();
-        allowResponses (); //only allow response on response page
+        imageIndex = getCookie ("imageIndex"); //get image index
+        blockIndex = getCookie ("blockIndex"); //get blockIndex index
+        
+        show (blockIndex + "." + imageIndex); //show the image
+        start = +new Date (); //get the time
+        allowResponses (); //allow a response
         
         //play sound
-        if (tones[j-1] != "") { //if not empty
+        if (tones[toneIndex-1] != "") { //if not empty
             setTimeout(function () { //delay tone
                 playTone(); //play tone
-            }, tones[j-1]); //delay in ms
+            }, tones[toneIndex-1]); //delay in ms
         }
-        j = j+1;
+        
+        toneIndex++; //increment global tone index
+        
         myTimeout = setTimeout(function() { //timeout, call response with null input
-            timeout ();
+            timeout (); //if they didn't respond
         }, 750); //timeout
+        
     }, 500); //half a second between image + tone trials - ask aaron about this delay
 }
 
-function startAgain () {
-    show("base");
+//Show base image and then image
+function showQuestion () {
+    show ("base"); //show base image - dot
+    
     setTimeout(function() {
-        hide ("base"); //hide base image
-        showElem1();
+        hide ("base"); //hide base image - dot
+        showTestImage(); //show next image
     }, 500); //half a second between image + tone trials - ask aaron about this delay
 }
 
+//Pause between blocks & questions
 function pauseBtwn () {
     setTimeout(function() {
-        startAgain();
+        showQuestion(); //show next round of base image + image
     }, 1000); //wait 1 second
 }
 
+//Show the pause screen between blocks
 function showPause () {
-    show ("pause");
-    allowResponses();
+    show ("pause"); //show the pause prompt "Press Enter to continue"
+    allowResponses(); //allow the user to press enter to move on
 }
 
+//Respond to user input
 function response (e) {
-    end = +new Date();
-    var response_time = end - start;
-    disallowResponses (); //only allow response on response page
-    clearTimeout (myTimeout);
-    var keycode = getResponse ();
-    var i = getCookie ("elem"); //get i
-    var b = getCookie("block");
-    var instr = getCookie ("instr");
+    end = +new Date(); //get time
+    var response_time = end - start; //calculate response time
+    disallowResponses (); //stop allowing a user response
+    clearTimeout(myTimeout); //clear the timeout
     
-    if (instr <= numInstructions) { //if cycling through instructions
-        if (typeTest == "practice") {
-            hide("instructions" + instr); //hide instructions
-            if (keycode == 37) { //left
-                if (+instr > 1) { //can't go left any more than 1
-                    setCookie("instr",(+instr) - 1, 1); //decrement instructions page
-                } //else, do nothing - stay at this page
-                showInstructions();
-            } else if (keycode == 39) { //right
-                increment("instr", (+instr));
-                if (+instr < numInstructions) {
-                    showInstructions();
-                } else {
-                    startAgain (); //start test
+    var userResponse = getResponse (); //get the key they entered
+    imageIndex = +(getCookie ("imageIndex")); //get question index
+    blockIndex = +(getCookie ("blockIndex")); //get blockIndex index
+    
+    //if it's a practice test
+    if (typeTest == "practice") {
+        instructionIndex = +(getCookie ("instructionIndex")); //get the instructions index
+        
+        //if cycling through instructions
+        if (instructionIndex <= numInstructions) { 
+            hide ("instruction" + instructionIndex.toString()); //hide instruction
+            
+            //if it's the last instruction
+            if (instructionIndex == numInstructions) { 
+                //If they hit spacebar, continue to practice test
+                if (userResponse == spacebar) { //spacebar
+                    increment ("instructionIndex", instructionIndex); //increment instruction index
+                    showQuestion (); //start test
+                } else { //invalid key pressed
+                    showInstruction (); //continue to allow a correct response
                 }
-            } else { //invalid key pressed
-                showInstructions();
             }
-        } else {
-            hide("startOver");
-            if (keycode == 32) { //spacebar - redo instructions 
-                var url = "soundTest.php?n=" + participant;
-                if (all) {
-                    url += "&all";
-                }
-                window.location = url; //start over
-            } else if (keycode == 13) { //enter - continue
-                setCookie ("instr", numInstructions+1, 1); //avoid instructions
-                startAgain (); //start test
-            } else { //invalid input
-                showInstructions();
+            //If the user pressed left arrow
+            else if (userResponse == left) { //left
+                if (instructionIndex > 1) { //can't go left any more than 1
+                    setCookie ("instructionIndex", instructionIndex - 1, 1); //decrement instruction index to go back one page
+                } //else, do nothing - stay at this instruction
+                showInstruction (); //show instruction
             }
+            //If the user pressed right arrow
+            else if (userResponse == right) { //right
+                increment ("instructionIndex", instructionIndex); //increment the instruction index
+                showInstruction (); //show instruction
+            }
+            //Anything else pressed, do nothing
+            else { //invalid key pressed
+                showInstruction (); //allow a correct response
+            }
+            
+            //Don't do anything else, we're just navigating instructions
+            return;
         }
-        return;
     }
     
-    hide (b+"."+i); //hide elem
-    var pause = document.getElementById("pause");
+    hide (blockIndex.toString () + "." + imageIndex.toString ()); //hide test image
+    var pause = document.getElementById ("pause"); //get the pause element
     
-    if (pause.offsetParent !== null && keycode == 13) {
-        setCookie ("elem", 1, 1);
-        i = getCookie ("elem");
-        increment ("block", (+b));
-        hide ("pause");
+    //If the user pressed enter from the pause between blocks screen
+    if (pause.offsetParent !== null && userResponse == enter) { //enter
+        setCookie ("imageIndex", 1, 1); //reset the question index to 1
+        imageIndex = 1; //set the question index to 1
+        increment ("blockIndex", blockIndex); //increment the blockIndex index
+        hide ("pause"); //hide the pause between blocks screen
     } else {
-        setCookie("response."+b+"."+i, keycode, 1); //save response
-        setCookie("response_time."+b+"."+i, response_time, 1); //save response time
-        if ((+b) == blocks && i == numberQuestions[blocks - 1]) {
-            if (typeTest == "practice") { //practice test - redirect to real test
-                var url = "soundTest.php?n=" + participant + "&test";
-                if (all) {
-                    url += "&all";
-                }
-            } else { //real test - save the results
-                var url = "../results/saveSoundResponses.php?participant="+participant+"&";
-                var f = 1;
-                for (k=1; k <= blocks; k++) {
-                    for (h=1; h <= numberQuestions[k-1]; h++) {
-                        url += f+"="+getCookie("response."+k+"."+h)+"&";
-                        url += f+"_time="+getCookie("response_time."+k+"."+h)+"&";
-                        f++;
+        //It was a response to a test image
+        setCookie ("response." + blockIndex.toString () + "." + imageIndex.toString (), userResponse, 1); //save response
+        setCookie ("response_time." + blockIndex.toString () + "." + imageIndex.toString (), response_time, 1); //save response time
+        
+        //If it was the last question
+        if (blockIndex == numBlocks && imageIndex == numQuestions[numBlocks - 1]) {
+           
+            //If it was the real test, save the results
+            if (typeTest == "test") { 
+                var url = "../results/saveSoundResponses.php?participant=" + name + "&"; //URL of save results page
+                
+                var totalCounter = 1; //total counter
+                //For each blockIndex
+                for (blockCounter = 1; blockCounter <= numBlocks; blockCounter++) { //blockIndex counter
+                    //For each question
+                    for (questionCounter=1; questionCounter <= numQuestions[blockCounter-1]; questionCounter++) { //question counter
+                        url += totalCounter + "=" + getCookie ("response." + blockCounter + "." + questionCounter) + "&"; //send the response
+                        url += totalCounter + "_time=" + getCookie ("response_time." + blockCounter + "." + questionCounter) + "&"; //send the response time
+                        totalCounter++; //increment the total counter
                     }
                 }
-                url += "all="+all;
+                window.location = url; //redirect to that page and save the results
             }
-            window.location = url;
-        } else {
-            if (i == numberQuestions[b-1]) {
-                showPause();
-                return;
+ 
+            //Done with practice test - show "Notify Researcher" page
+            else {
+                show ("practiceDone"); //show "Notify Researcher" page
+                return; //Done with test, don't do anything else
             }
         }
-        increment ("elem", (+i)); //increment i
+
+        //If it was not the last question, continue the test
+        else {
+            //If it was the last question in that blockIndex, show the pause between blocks page
+            if (imageIndex == numQuestions[blockIndex-1]) { //last question in blockIndex
+                showPause(); //show the pause between blocks page
+                return; //Don't do anything else
+            }
+        }
+        increment ("imageIndex", imageIndex); //increment image index
     }
-    pauseBtwn ();
+    
+    pauseBtwn (); //pause, then show next image
 }
 
-var start, end;
-var j = 1;
-setCookie ("elem", 1, 1); //set i initially to 1
-setCookie ("block", 1, 1); //set block initially to 1
-setCookie("instr", 1, 1); //set instructions initially to 1
-showInstructions();
+var start, end; //time variables
+var imageIndex, blockIndex, instructionIndex; //index variables
+var toneIndex = 1; //global tone index
+
+//Keycode legend
+var spacebar = 32;
+var left = 37;
+var right = 39;
+var enter = 13;
+
+setCookie ("imageIndex", 1, 1); //set image index initially to 1
+setCookie ("blockIndex", 1, 1); //set blockIndex index initially to 1
+
+//If this is a practice test
+if (typeTest == "practice") { 
+    setCookie ("instructionIndex", 1, 1); //set instruction index initially to 1
+    showInstruction (); //show the first instruction
+}
+//If this is a real test
+else {
+    showQuestion (); //start the test
+}
 
