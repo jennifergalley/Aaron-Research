@@ -43,7 +43,7 @@
     endif;
     
     //If no test selected
-    if (empty($_POST["name"]) and !isset($_GET['done'])) : ?>
+    if (empty($_POST["name"]) and !isset($_GET['done']) and !isset($_GET['pdone'])) : ?>
        
         <div id="start">
         
@@ -85,7 +85,16 @@
         // Thank them for participating  
         thankYou ();
         
-    endif; ?>
+    elseif (isset($_GET['pdone'])) : 
+?>
+        <!-- Done With Practice Test Page -->
+        <div id="practiceDone">
+            <h1>Notify the researcher that you have completed the practice session.</h1>
+            <a href="http://aaron-landau.appspot.com/test/imageTest.php">Back to Test Selection</a>
+        </div>
+<?php
+    endif; 
+?>
 
     <!-- Populate Test -->
 <?php 
@@ -149,13 +158,8 @@
                     endif; ?>
             </div>
     <?php 
-        endforeach; ?>
-        
-        <!-- Done With Practice Test Page -->
-        <div id="practiceDone" style="display:none">
-            <h1>Notify the researcher that you have completed the practice session.</h1>
-            <a href="http://aaron-landau.appspot.com/test/imageTest.php">Back to Test Selection</a>
-        </div>
+        endforeach; 
+    ?>
             
     <!-- Switch Screen -->
     <div id="switch" style="display:none">

@@ -5,6 +5,7 @@
     $arr = decodeJSON($soundResponses);
     $results = array ();
     $results["date"] = date("m-d-y h:i:s a");
+    $results["type"] = $_GET['typeTest'];
     $results["participant"] = $_GET['participant'];
     $tests = decodeJSON ($soundTests);
     $test = $tests["test"];
@@ -90,11 +91,8 @@
     
     $arr[] = $results;
     encodeJSON ($soundResponses, $arr);
+    
 ?>
 <script type="text/javascript">
-    window.location = "<?php 
-        if ($_GET['all'] == "0") 
-            echo $subdir.'test/soundTest.php?done';
-        else 
-            echo $subdir.'test/imageTest.php?n='.$_GET['participant']; ?>";
+    window.location = "<?php echo $results["type"] == "test" ? $subdir.'test/soundTest.php?done' : $subdir.'test/soundTest.php?pdone'; ?>";
 </script>

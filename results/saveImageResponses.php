@@ -5,6 +5,7 @@
     $arr = decodeJSON($imageResponses);
     $results = array ();
     $results["date"] = date("m-d-y h:i:s a");
+    $results["type"] = $_GET['typeTest'];
     $results["participant"] = $_GET['participant'];
     $tests = decodeJSON ($imageTests);
     $test = $tests["test"];
@@ -74,7 +75,8 @@
     
     $arr[] = $results;
     encodeJSON ($imageResponses, $arr);  
+    
 ?>
 <script type="text/javascript">
-    window.location = "<?php echo $subdir.'test/imageTest.php?done';?>";
+    window.location = "<?php echo $results["type"] == "test" ? $subdir.'test/imageTest.php?done' : $subdir.'test/imageTest.php?pdone';?>";
 </script>

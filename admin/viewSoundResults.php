@@ -24,6 +24,10 @@
             <td><?php echo $r["participant"]; ?></td>
         </tr>
         <tr>
+            <td><b>Type of Test</b></td>
+            <td><?php echo ucwords($r["type"]); ?></td>
+        </tr>
+        <tr>
             <td><b>Date Taken</b></td>
             <td><?php echo $r["date"]; ?></td>
         </tr>
@@ -44,6 +48,10 @@
         <tr>
             <td><b>Particpiant</b></td>
             <td><?php echo $r["participant"]; ?></td>
+        </tr>
+        <tr>
+            <td><b>Type of Test</b></td>
+            <td><?php echo ucwords($r["type"]); ?></td>
         </tr>
         <tr>
             <td><b>Date Taken</b></td>

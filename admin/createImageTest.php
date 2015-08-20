@@ -16,7 +16,7 @@
         $json = decodeJSON($imageTests);
         $test = array ();
         $test["Date"] = date("m-d-y h:i:s a");
-        $test["Switch"]["after"] = $_SESSION['type'] == 'practice' ? 12 : 40;
+        $test["Switch"]["after"] = $_SESSION['type'] == 'practice' ? 13 : 40;
         $test["Switch"]["text"] = $_POST['switch_text'];
         $test["Switch"]["duration"] = 3000;
         $blocks = array ();

@@ -132,12 +132,10 @@ function response(e) {
         if (blockIndex == numBlocks && imageIndex == numQuestions[numBlocks - 1]) {
             
             //If it was the real test, save the results
-            if (typeTest == "test") { 
-                saveResults("../results/saveImageResponses.php?participant=");
-            }
+            saveResults("../results/saveImageResponses.php?typeTest="+typeTest+"&participant=");
 
             //Done with practice test - show "Notify Researcher" page
-            else {
+            if (typeTest == "practice") {
                 show("practiceDone"); //show "Notify Researcher" page
             }
             
