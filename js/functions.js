@@ -74,22 +74,7 @@
         return keycode;
     }
     
-    function saveResults(saveLocation) {
-        //If it was the real test, save the results
-        var url = saveLocation + name + "&"; //URL of the save results page
-        
-        var totalCounter = 1; //total counter
-
-        //For each block
-        for (blockCounter = 1; blockCounter <= numBlocks; blockCounter++) { //block counter
-            
-            //For each question
-            for(questionCounter = 1; questionCounter <= numQuestions[blockCounter - 1]; questionCounter++) { //question counter
-                url += totalCounter + "=" + getCookie("response." + blockCounter + "." + questionCounter) + "&"; //send the response
-                url += totalCounter + "_time=" + getCookie("response_time." + blockCounter + "." + questionCounter) + "&"; //send the response time
-                totalCounter++; //increment the total counter
-            }
-        }
-    
-        window.location = url;//redirect to that page and save the results
+    function saveRecord(saveLocation, key) {
+        var url = saveLocation + "?key=" + key + "&participant=" + name + "&typeTest=" + typeTest; //URL of the save results page
+        window.location = url; //redirect to that page and save the record
     }

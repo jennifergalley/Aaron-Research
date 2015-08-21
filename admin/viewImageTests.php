@@ -58,9 +58,26 @@
                 onclick="return confirm('Are you sure you want to delete this test?');">Delete This Test</a></td>
         </tr>
     </table>
+    
+<?php 
+    foreach ($t["Block"] as $num => $trials) : ?>
+        <h2>Block <?php echo $num; ?></h2>
+        
+        <!-- Switch Text -->
+        <table>
+            <tr> 
+                <td>Switch</td>
+                <td>After</td>
+                <td><?php echo $trials["Switch"]["after"]; ?></td>
+                <td>Text</td>
+                <td><?php echo $trials["Switch"]["text"]; ?></td>
+                <td>Duration (ms)</td>
+                <td><?php echo $trials["Switch"]["duration"]; ?></td>
+            </tr>
+        </table>
+        
     <table class='view'>
         <tr>
-            <th>Block</th>
             <th>Trial</th>
             <th>First Character</th>
             <th>First Color</th>
@@ -68,20 +85,25 @@
             <th>Second Color</th>
             <th>Right Answer</th>
         </tr>
-        <?php foreach ($t["Block"] as $num => $trials) : 
-            foreach ($trials as $n =>$question) : ?>
-        <tr> 
-            <td><?php echo $num; ?></td>
-            <td><?php echo $n; ?></td>
-            <td><?php echo $question["left"]["character"]; ?></td>
-            <td><?php echo $question["left"]["color"]; ?></td>
-            <td><?php echo $question["right"]["character"]; ?></td>
-            <td><?php echo $question["right"]["color"]; ?></td>
-            <td><?php echo ucwords($t["Right Answers"][$n]); ?></td>
-        </tr>
-        <?php endforeach; ?>
-        <?php endforeach; ?>
+        
+        <?php 
+            foreach ($trials as $n => $question) : 
+                if ($n != "Switch") :
+        ?>
+                    <!-- Characters and Colors -->
+                    <tr> 
+                        <td><?php echo $n; ?></td>
+                        <td><?php echo $question["left"]["character"]; ?></td>
+                        <td><?php echo $question["left"]["color"]; ?></td>
+                        <td><?php echo $question["right"]["character"]; ?></td>
+                        <td><?php echo $question["right"]["color"]; ?></td>
+                        <td><?php echo ucwords($t["Right Answers"][$n]); ?></td>
+                    </tr>
+            <?php 
+                endif;
+            endforeach; ?>
     </table>
+    <?php endforeach; ?>
 <?php 
     endif;
     endif;

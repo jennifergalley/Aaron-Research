@@ -12,9 +12,8 @@ var myTimeout;
 function showTestImage() {
     setTimeout(function() {
         imageIndex = getCookie("imageIndex"); //get image index
-        blockIndex = getCookie("blockIndex"); //get block index
         
-        show(blockIndex + "." + imageIndex); //show the image
+        show(imageIndex); //show the image
         start = +new Date(); //get the time
         allowResponses(); //allow a response
         
@@ -60,7 +59,6 @@ function response(e) {
     
     var userResponse = getResponse(); //get the key they entered
     imageIndex = +(getCookie("imageIndex")); //get question index
-    blockIndex = +(getCookie("blockIndex")); //get block index
     
     //if it's a practice test
     if (typeTest == "practice") {
@@ -110,43 +108,37 @@ function response(e) {
         }
     }
 
-    hide(blockIndex.toString() + "." + imageIndex.toString()); //hide test image
+    hide(imageIndex.toString()); //hide test image
     var pause = document.getElementById("pause"); //get the pause element
     
     //If the user pressed enter from the pause between blocks screen
     if (pause.offsetParent !== null && userResponse == enter) { //enter
         reset("imageIndex"); //reset the question index to 1
         imageIndex = 1; //set the question index to 1
-        increment("blockIndex"); //increment the block index
         hide("pause"); //hide the pause between blocks screen
+    } else if (pause.offsetParent !== null) {
+        showPause();
+        return;
     } else {
         //It was a response to a test image
-        setCookie("response." + blockIndex.toString() + "." + imageIndex.toString(), userResponse, 1); //save response
-        setCookie("response_time." + blockIndex.toString() + "." + imageIndex.toString(), response_time, 1); //save response time
+        
+        var r = getCookie("r");
+        r += "r" + imageIndex.toString() + "=" + userResponse + "&";
+        var rt = getCookie("rt");
+        rt += "rt" + imageIndex.toString() + "=" + response_time + "&";
+        
+        setCookie("r", r, 1); //save response
+        setCookie("rt", rt, 1); //save response time
         
         //If it was the last question
-        if (blockIndex == numBlocks && imageIndex == numQuestions[numBlocks - 1]) {
-           
-            //If it was the real test, save the results
-            saveResults("../results/saveSoundResponses.php?typeTest="+typeTest+"&participant=");
- 
-            //Done with practice test - show "Notify Researcher" page
-            if (typeTest == "practice") {
-                show("practiceDone"); //show "Notify Researcher" page
-                return; //Done with test, don't do anything else
-            }
-        }
+        if (imageIndex == numQuestions[blockNum - 1]) {
+            
+            //save the results
+            saveResults("../results/saveSoundResponses.php", getCookie("key"));
 
-        //If it was not the last question, continue the test
-        else {
-            //If it was the last question in that block, show the pause between blocks page
-            if (imageIndex == numQuestions[blockIndex-1]) { //last question in block
-                reset("imageIndex"); //reset image index
-                increment("blockIndex"); //increment the block index
-                showPause(); //show the pause between blocks page
-                return; //Don't do anything else
-            }
+            return; //Done with test, don't do anything else
         }
+        
         increment("imageIndex"); //increment image index
     }
     
@@ -157,7 +149,7 @@ function response(e) {
 }
 
 var start, end; //time variables
-var imageIndex, blockIndex, instructionIndex; //index variables
+var imageIndex, instructionIndex; //index variables
 var toneIndex = 0; //global tone index
 
 //Keycode legend
@@ -166,17 +158,92 @@ var left = 37;
 var right = 39;
 var enter = 13;
 
-reset("imageIndex"); //set image index initially to 1
-reset("blockIndex"); //set block index initially to 1
+if (notSaved) {
+    setCookie("key", +new Date(), 1);
+    setCookie("r", "", 1);
+    setCookie("rt", "", 1);
+    saveRecord("../results/saveSoundResponses.php", getCookie("key"));
+} else {
+    reset("imageIndex"); //set image index initially to 1
 
-//If this is a practice test
-if (typeTest == "practice") { 
-    reset("instructionIndex"); //set instruction index initially to 1
-    showInstruction(); //show the first instruction
+    //If this is a practice test
+    if (typeTest == "practice") {
+        reset("instructionIndex"); //set instruction index initially to 1
+        showInstruction(); //show the first instruction
+    }
+
+    //If this is a real test
+    else {
+        //if this is not the first block, pause page
+        if (blockNum != 1) {
+            showPause(); //show the pause between blocks page
+        }
+        
+        //it's the first block, just start the test
+        else {
+            showQuestion(); //start the test
+        }
+    }
 }
 
-//If this is a real test
-else {
-    showQuestion(); //start the test
+
+
+function saveResults(saveLocation, key) {
+    //save the results
+    var url = saveLocation + "?key=" + key.toString() + "&typeTest=" + typeTest + '&block=' + blockNum; //URL of the save results page
+
+    var parameters = getCookie("r"); //send the responses
+    parameters += getCookie("rt"); //send the response times
+    
+    var mypostrequest = new ajaxRequest();
+    mypostrequest.onreadystatechange = function(){
+        if (mypostrequest.readyState == 4){
+            if (mypostrequest.status == 200 || window.location.href.indexOf("http") == -1){
+                // document.getElementById("result").innerHTML=mypostrequest.responseText;
+
+                var newURL = "";
+    
+                if (typeTest == 'test') {
+                    if (blockNum == 4) {
+                        newURL = '/test/soundTest.php?done';
+                    } else {
+                        newURL = '/test/soundTest.php?type=' + typeTest + '&block=' + (blockNum+1).toString();
+                    }
+                } else {
+                    newURL = '/test/soundTest.php?pdone';
+                }
+                
+                window.location = newURL;
+            }
+            else {
+                alert("An error has occured saving the responses");
+            }
+        }
+    }
+    
+    // var parameters = "name="+namevalue+"&age="+agevalue;
+    mypostrequest.open("POST", url, true);
+    mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    mypostrequest.send(parameters);
 }
 
+function ajaxRequest() {
+    var activexmodes = ["Msxml2.XMLHTTP", "Microsoft.XMLHTTP"]; //activeX versions to check for in IE
+    if (window.ActiveXObject) { //Test for support for ActiveXObject in IE first (as XMLHttpRequest in IE7 is broken)
+        for (var i = 0; i < activexmodes.length; i++) {
+            try {
+                return new ActiveXObject(activexmodes[i]);
+            }
+            catch (e) {
+                //suppress error
+            }
+        }
+    }
+    else if (window.XMLHttpRequest) // if Mozilla, Safari etc
+        return new XMLHttpRequest();
+    else
+        return false;
+}
+
+
+    

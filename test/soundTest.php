@@ -9,11 +9,11 @@
         "img22.png",
         "img23.png",
         "img24.png",
-        "img25.png"
+        "img26.png"
     ];
     
     // If no test selected
-    if (empty($_POST["name"])) :
+    if (empty($_POST) and empty($_GET)) :
     
         require_once ($header);
         logout ();
@@ -27,7 +27,7 @@
     endif;
 
     // If no test selected
-    if (empty($_POST["name"]) and !isset($_GET['done']) and !isset($_GET['pdone'])) : ?>
+    if (empty($_POST) and empty($_GET)) : ?>
     
         <div id="start">
     
@@ -64,11 +64,13 @@
             
         </div>
 <?php 
-    elseif (isset($_GET['done'])) : 
+    elseif (isset($_GET['done'])) : ?>
     
-        // Thank them for participating 
-        thankYou ();
+        <!-- After Test Finished -->
+        <h1>Your results have been recorded. <br>Thanks for participating!</h1>
+        <a href="http://aaron-landau.appspot.com/test/soundTest.php">Back to Test Selection</a>
         
+<?php
     elseif (isset($_GET['pdone'])) : 
 ?>
         <!-- Done With Practice Test Page -->
@@ -76,16 +78,13 @@
             <h1>Notify the researcher that you have completed the practice session.</h1>
             <a href="http://aaron-landau.appspot.com/test/soundTest.php">Back to Test Selection</a>
         </div>
-<?php
-    endif; 
-?>
-
+        
     <!-- Populate Test -->
 <?php 
     // If a test is selected
-    if (!empty($_POST["start"])) : 
-        $name = $_POST['name']; //participant name
-        $type = $_POST['type']; //type of the test
+    elseif (!empty($_POST) or !empty($_GET)) : 
+        $type = !empty($_POST['type']) ? $_POST['type'] : $_GET['type'];
+        $block = !empty($_GET['block']) ? $_GET['block'] : 1;
         
         $test = decodeJSON ($soundTests); //decode the JSON tests
         $test = $test[$type]; //get the correct test
@@ -143,22 +142,21 @@
         
         <!-- Test Images -->
         <?php 
-            // For each block
-            foreach ($test["Block"] as $b => $block) :
-                $i = 1;
-                
-                // For each question
-                foreach ($block as $question) : ?>
+            //Get the block
+            $blockContents = $test["Block"]["$block"];
+            $i = 1;
+            
+            // For each question
+            foreach ($blockContents as $question) : ?>
 
-                    <!-- Image -->
-                    <div id="<?php echo $b.".".$i++; ?>" style="display:none">
-                        <img class="test" src="<?php echo $imageURL.$question['image'];?>">
-                    </div>
-                    
-            <?php 
-                endforeach; 
-            endforeach; ?>
-        
+                <!-- Image -->
+                <div id="<?php echo $i++; ?>" style="display:none">
+                    <img class="test" src="<?php echo $imageURL.$question['image'];?>">
+                </div>
+                
+        <?php 
+            endforeach; 
+        ?>
         
         <!-- Javascript Variables -->
         <script type="text/javascript">
@@ -171,8 +169,8 @@
                 $arr = "";
                 
                 //for each block get count of questions
-                foreach ($test["Block"] as $block) {
-                    $arr .= count($block).",";
+                foreach ($test["Block"] as $blockContents) {
+                    $arr .= count($blockContents).",";
                 }
                 
                 $arr = rtrim ($arr, ",");
@@ -180,23 +178,23 @@
             ?>];
             
             //Participant name
-            var name = "<?php echo $name; ?>";
+            var name = "<?php echo !empty($_POST['name']) ? $_POST['name'] : ""; ?>";
             
             //Tones to play
             var tones = [<?php 
                 $blockIndex = 1;
                 
                 //For each block
-                foreach ($test["Block"] as $b => $block) {
+                foreach ($test["Block"] as $b => $blockContents) {
                     $questionIndex = 1;
                     
                     //For each question
-                    foreach ($block as $question) {
+                    foreach ($blockContents as $question) {
                         //If there is a tone, then MS delay. Else, empty
                         echo '"'.$question['tone'].'"';
                         
                         //if there is a next question
-                        if (array_key_exists($questionIndex+1, $block)) {
+                        if (array_key_exists($questionIndex+1, $blockContents)) {
                             echo ", ";
                         }
                         
@@ -218,17 +216,23 @@
             //Type of test - practice or test
             var typeTest = "<?php echo $type; ?>";
             
+            var blockNum = <?php echo $block; ?>;
+        
+            var notSaved = <?php echo (!isset($_GET['record']) and empty($_GET['block'])) ? "true" : "false"; ?>;
+        
         </script>
         
         <!-- Javascript Functions -->
         <script type="text/javascript" src="<?php echo $subdir.'js/functions.js';?>"></script>
         <script type="text/javascript" src="<?php echo $subdir.'js/sound_test.js';?>"></script>
 
+        <div id="result"></div>
+
 <?php 
     endif; 
     
     //If showing header at top, show footer at bottom
-    if (empty($name)) {
+    if (empty($_POST) and empty($_GET)) {
         require_once ($footer);
     }
 ?>

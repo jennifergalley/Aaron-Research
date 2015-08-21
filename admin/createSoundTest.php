@@ -8,48 +8,49 @@
     
     redirectToLogin();
     
-    if (!empty($_POST['continue'])) {
+    if (!empty($_POST['chooseType'])) {
         $_SESSION['type'] = $_POST['type'];
         $_SESSION['trials'] = $_POST['type'] == 'practice' ? 20 : 120;
         $_SESSION['blocks'] = $_POST['type'] == 'practice' ? 1 : 4;
-    } elseif (!empty($_POST['submit'])) {
+    } elseif (isset($_POST["block"])) {
         $json = decodeJSON($soundTests);
-        $test = array ();
+        
+        $test = $json[$_SESSION["type"]];;
         $test["Date"] = date("m-d-y h:i:s a");
-        $blocks = array ();
+        $c = (($_POST["block"]-1) * $_SESSION["trials"]) + 1;
         $trials = array ();
-        $correct = array ();
-        $b = 1; $k = 0;
-        for ($j=0; $j<$_SESSION['blocks']; $j++) {
-            $trials = array ();
-            for ($i=0; $i<$_SESSION['trials']; $i++) {
-                $index = $i + 1;
-                $image = $_POST['image_'.$j."_".$i];
-                $trials["$index"] = array (
-                    "image" => $image,
-                    "tone" => $_POST['tone'][$k++]
-                );
-                $correct["$index"] = $_POST['correct_'.$j."_".$i];
-            }
-            $blocks[$b++] = $trials;
+        $k = 0;
+        
+        for ($i=1; $i<=$_SESSION['trials']; $i++) {
+            $image = $_POST['image'.$i];
+            $trials["$i"] = array (
+                "image" => $image,
+                "tone" => $_POST['tone'][$k++]
+            );
+            $test["Right Answers"]["$c"] = $_POST['correct'.$i];
+            $c++;
         }
-        $test["Block"] = $blocks;
-        $test["Right Answers"] = $correct;
+        
+        $test["Block"][$_POST['block']] = $trials;
         $json[$_SESSION['type']] = $test;
+        
         encodeJSON ($soundTests, $json);
         $error = "Test Created!";
         $count++; 
-    
     }
-    
+        
+    $block = empty($_POST['blockChosen']) ? 1 : $_POST['blockChosen'];
+    $currTest = $tests[$_SESSION['type']];
     backNavigation ();
 ?>
 
-<h1>Generate Sound Test</h1>
+<h1>Generate Test 1</h1>
 
-<?php if (empty($_POST['continue']) or !empty($error)): 
-    displayError(); ?>
-    <!-- Test Block & Number Trials -->
+<?php if ((empty($_POST['chooseType']) and empty($_POST['chooseBlock'])) or !empty($error)): 
+    displayError(); 
+?>
+
+    <!-- Type of Test -->
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <table class='form'>
             <tr>
@@ -61,58 +62,90 @@
                     </select>
                 </td>
             </tr>
-<!--            <tr>
-                <td><label for="blocks">Number of blocks:</label></td>
-                <td><input required type="number" name="blocks"></td>
-            </tr>
-            <tr>
-                <td><label for="trials">Number of trials per block:</label></td>
-                <td><input required type="number" name="trials"></td>
-            </tr>-->
         </table>
-        <input type="submit" name="continue" value="Continue">
+        <input type="submit" name="chooseType" value="Continue">
     </form>
-<?php else: ?>
-    <!-- Generate Test Form -->
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
-        <?php for ($k=0; $k < $_SESSION['blocks']; $k++) : ?>
-            <h2>Block <?php echo $k+1; ?></h2>
-        <?php for ($i=0; $i < $_SESSION['trials']; $i++) : ?>
-        <h2>Trial <?php echo $i+1; ?></h2>
+    
+<?php elseif (!empty($_POST['chooseType']) and $_POST['type'] == 'test') : ?>
+    
+    <!-- Block number -->
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <table class='form'>
             <tr>
-                <!-- Image -->
-                <td><label for="<?php echo 'image_'.$k.'_'.$i; ?>">Image:</label></td>
-            </tr>
-            <tr>
-                <?php $arr = array("left.png", "right.png");
-                    foreach ($arr as $p) : 
-                        $pic = $imageURL.$p; ?>
-                <td><label><input id="<?php echo $p == "left.png" ? 'leftIMG' : 'rightIMG'; echo '_'.$k.'_'.$i; ?>" required type="radio" name="<?php echo 'image_'.$k.'_'.$i; ?>" value="<?php echo $p; ?>" onchange="selectImg(<?php echo "'".$k.'_'.$i."'"; ?>)"><img class="form_img" src="<?php echo $pic; ?>"></label></td>
-                <?php endforeach; ?>
-            <tr>
-            <tr>
-                <!-- Tone -->
-                <td><label for="tone[]">Tone Delay in ms:</label></td>
-                <td><select id="select_<?php echo $k.'_'.$i; ?>" name="tone[]" onchange="selectNone(<?php echo "'".$k.'_'.$i."'"; ?>)">
-                    <option value="">No Tone</option>
-                    <option value="125">125ms</option>
-                    <option value="200">200ms</option>
-                </select>
+                <td><label for="blockChosen">Block:</label></td>
+                <td>
+                    <select name="blockChosen">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
                 </td>
             </tr>
-            <tr>
-                <!-- Correct Answer -->
-                <td><label for="correct_<?php echo $k.'_'.$i; ?>">Correct Answer:</label></td>
-                <td><input id="left_<?php echo $k.'_'.$i; ?>" required type="radio" name="correct_<?php echo $k.'_'.$i; ?>" value="left">Left</input></td>
-                <td><input id="right_<?php echo $k.'_'.$i; ?>" required type="radio" name="correct_<?php echo $k.'_'.$i; ?>" value="right">Right</input></td>
-                <td><input id="none_<?php echo $k.'_'.$i; ?>" required type="radio" name="correct_<?php echo $k.'_'.$i; ?>" value="no response">None</input></td>
-            </tr>
         </table>
-        <br>
-        <?php endfor; ?>
-        <?php endfor; ?>
-        <input type="submit" name="submit" value="Submit">
+        <input type="submit" name="chooseBlock" value="Continue">
+    </form>
+    
+<?php else: ?>
+
+    <h2>Block <?php echo $block; ?></h2>
+    
+    <!-- Generate Test -->
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
+        <input type="hidden" name="block" value="<?php echo $block; ?>">
+        
+        <!-- For Each Trial -->
+        <?php 
+            for ($i=0; $i < $_SESSION['trials']; $i++) : 
+                $num = $i+1;
+                $img = (empty($currTest) or empty($currTest["Block"]["$block"]["$num"]["image"])) ? "left.png" : $currTest["Block"]["$block"]["$num"]["image"];
+                $tone = (empty($currTest) or empty($currTest["Block"]["$block"]["$num"]["tone"])) ? "" : $currTest["Block"]["$block"]["$num"]["tone"];
+                $c = (($block-1) * $_SESSION["trials"]) + 1;
+                $rightAnswer = (empty($currTest) or empty($currTest["Right Answers"][$c])) ? "left" : $currTest["Right Answers"][$c];
+        ?>
+            
+                <h2>Trial <?php echo $num; ?></h2>
+                
+                <table class='form'>
+                    <tr>
+                        <!-- Image -->
+                        <td><label for="image<?php echo $num; ?>">Image:</label></td>
+                    </tr>
+                    <tr>
+                        <td><label>
+                            <input id="<?php echo 'leftIMG_'.$i; ?>" required type="radio" name="image<?php echo $num; ?>" value="left.png" onchange="selectImg(<?php echo "'".$i."'"; ?>)" <?php if ($img == "left.png") echo "checked"; ?> />
+                            <img class="form_img" src="<?php echo $imageURL."left.png"; ?>">
+                        </label></td>
+                        <td><label>
+                            <input id="<?php echo 'rightIMG_'.$i; ?>" required type="radio" name="image<?php echo $num; ?>" value="right.png" onchange="selectImg(<?php echo "'".$i."'"; ?>)" <?php if ($img == "right.png") echo "checked"; ?> />
+                            <img class="form_img" src="<?php echo $imageURL."right.png"; ?>">
+                        </label></td>
+                    <tr>
+                    <tr>
+                        <!-- Tone -->
+                        <td><label for="tone[]">Tone Delay in ms:</label></td>
+                        <td><select id="select_<?php echo $i; ?>" name="tone[]" onchange="selectNone(<?php echo "'".$i."'"; ?>)">
+                            <option value="" <?php if ($tone == "") echo 'selected'; ?>>No Tone</option>
+                            <option value="125" <?php if ($tone == "125") echo 'selected'; ?>>125ms</option>
+                            <option value="200" <?php if ($tone == "200") echo 'selected'; ?>>200ms</option>
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- Correct Answer -->
+                        <td><label for="correct; ?>">Correct Answer:</label></td>
+                        <td><input id="left_<?php echo $i; ?>" required type="radio" name="correct<?php echo $num; ?>" value="left" <?php if ($img == "left.png" and $tone == "") echo "checked"; ?>>Left</input></td>
+                        <td><input id="right_<?php echo $i; ?>" required type="radio" name="correct<?php echo $num; ?>" value="right" <?php if ($img == "right.png" and $tone == "") echo "checked"; ?>>Right</input></td>
+                        <td><input id="none_<?php echo $i; ?>" required type="radio" name="correct<?php echo $num; ?>" value="no response" <?php if ($tone != "") echo "checked"; ?>>None</input></td>
+                    </tr>
+                </table>
+                <br>
+        <?php 
+            endfor; 
+        ?>
+                
+        <!-- Save Button -->
+        <input type="submit" name="submit" value="Save">
     </form>
 <?php 
     endif; 
@@ -141,3 +174,6 @@
     }
 </script>
 
+
+<br>
+<br>

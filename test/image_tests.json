@@ -1,13 +1,13 @@
 {
     "test": {
         "Date": "10-05-14 08:48:35 pm",
-        "Switch": {
-            "after": 8,
-            "text": "The new target is white",
-            "duration": 3000
-        },
         "Block": {
             "1": {
+                "Switch": {
+                    "after": 8,
+                    "text": "The new target is white",
+                    "duration": 3000
+                },
                 "1": {
                     "left": {
                         "character": "8",
@@ -147,13 +147,13 @@
     },
     "practice": {
         "Date": "05-14-15 09:25:19 pm",
-        "Switch": {
-            "after": 12,
-            "text": "The new target is gray.",
-            "duration": 3000
-        },
         "Block": {
             "1": {
+                "Switch": {
+                    "after": 12,
+                    "text": "The new target is gray.",
+                    "duration": 3000
+                },
                 "1": {
                     "left": {
                         "character": "6",

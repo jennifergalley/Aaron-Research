@@ -25,8 +25,4 @@
         $_SESSION['loggedIn'] = NULL;
     }
     
-    function thankYou () {?>
-        <!-- After Test Finished -->
-        <h1>Your results have been recorded. <br>Thanks for participating!</h1>
-    <?php }
 ?>

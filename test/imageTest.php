@@ -12,7 +12,7 @@
         "img7.png",
         "img8.png",
         "img9.png",
-        "img25.png"
+        "img26.png"
     ];
     
     $instructionsEven = [
@@ -25,11 +25,11 @@
         "img16.png",
         "img17.png",
         "img18.png",
-        "img25.png"
+        "img26.png"
     ];
     
     //If no test selected
-    if (empty($_POST["name"])) :
+    if (empty($_POST) and empty($_GET)) :
     
         require_once ($header);
         logout ();
@@ -43,7 +43,7 @@
     endif;
     
     //If no test selected
-    if (empty($_POST["name"]) and !isset($_GET['done']) and !isset($_GET['pdone'])) : ?>
+    if (empty($_POST) and empty($_GET)) : ?>
        
         <div id="start">
         
@@ -80,11 +80,13 @@
             
         </div>
 <?php
-    elseif (isset($_GET['done'])) :
+    elseif (isset($_GET['done'])) : ?>
         
-        // Thank them for participating  
-        thankYou ();
+        <!-- After Test Finished -->
+        <h1>Your results have been recorded. <br>Thanks for participating!</h1>
+        <a href="http://aaron-landau.appspot.com/test/imageTest.php">Back to Test Selection</a>
         
+<?php
     elseif (isset($_GET['pdone'])) : 
 ?>
         <!-- Done With Practice Test Page -->
@@ -92,16 +94,13 @@
             <h1>Notify the researcher that you have completed the practice session.</h1>
             <a href="http://aaron-landau.appspot.com/test/imageTest.php">Back to Test Selection</a>
         </div>
-<?php
-    endif; 
-?>
-
+        
     <!-- Populate Test -->
-<?php 
+<?php
     // If a test is selected
-    if (!empty($_POST["name"])) : 
-        $name = $_POST['name'];
-        $type = $_POST['type'];
+    elseif (!empty($_POST) or !empty($_GET)) : 
+        $type = !empty($_POST['type']) ? $_POST['type'] : $_GET['type'];
+        $block = !empty($_GET['block']) ? $_GET['block'] : 1;
         
         $test = decodeJSON ($imageTests);  
         $test = $test[$type];
@@ -161,11 +160,6 @@
         endforeach; 
     ?>
             
-    <!-- Switch Screen -->
-    <div id="switch" style="display:none">
-        <h1><?php echo $test["Switch"]["text"]; ?></h1>
-    </div>
-    
     <!-- Base Image - crosshair -->
     <div id="base" style="display:none">
         <img class="test" src="<?php echo $imageURL.'cross.png';?>">
@@ -178,31 +172,35 @@
     
     <!-- Test Images -->
     <?php 
-        //For each block
-        foreach ($test["Block"] as $b => $block) :
+        //Get the block
+        $blockContents = $test["Block"]["$block"];
+    ?>
+        <!-- Switch Screen -->
+        <div id="switch" style="display:none">
+            <h1><?php echo $blockContents["Switch"]["text"]; ?></h1>
+        </div>
+    <?php
+        //For each question
+        for ($num = 1; $num <= count($blockContents)-1; $num++) :
+            $image = $blockContents[$num];
+            $left = $image["left"];
+            $right = $image["right"]; ?>
             
-            //For each question
-            foreach ($block as $num => $image) :
-                $left = $image["left"];
-                $right = $image["right"]; ?>
+            <!-- Image -->
+            <div id="<?php echo $num; ?>" style="display:none">
                 
-                <!-- Image -->
-                <div id="<?php echo $b.".".$num; ?>" style="display:none">
-                    
-                    <!-- Left character -->
-                    <span class="left <?php if ($left['color']=='white' or $left["color"]=='#ffffff') echo ', white' ?>" style="color:<?php echo $left["color"]; ?>;">
-                            <?php echo $left["character"]; ?>
-                    </span>
-                    
-                    <!-- Right character -->
-                    <span class="right <?php if ($right['color']=='white' or $right["color"]=='#ffffff') echo ', white' ?>" style="color:<?php echo $right["color"]; ?>;">
-                            <?php echo $right["character"]; ?>
-                    </span>
-                    
-                </div>
-        <?php 
-            endforeach; 
-        endforeach; ?>
+                <!-- Left character -->
+                <span class="left <?php if ($left['color']=='white' or $left["color"]=='#ffffff') echo ', white' ?>" style="color:<?php echo $left["color"]; ?>;">
+                        <?php echo $left["character"]; ?>
+                </span>
+                
+                <!-- Right character -->
+                <span class="right <?php if ($right['color']=='white' or $right["color"]=='#ffffff') echo ', white' ?>" style="color:<?php echo $right["color"]; ?>;">
+                        <?php echo $right["character"]; ?>
+                </span>
+                
+            </div>
+    <?php endfor; ?>
     
     <!-- Javascript Variables -->
     <script type="text/javascript">
@@ -215,8 +213,8 @@
             $arr = "";
             
             //for each block get count of questions
-            foreach ($test["Block"] as $block) {
-                $arr .= count($block).",";
+            foreach ($test["Block"] as $blockContents) {
+                $arr .= (count($blockContents)-1).",";
             }
             
             $arr = rtrim ($arr, ",");
@@ -237,19 +235,23 @@
         ?>];
         
         //Participant name
-        var name = "<?php echo $name; ?>";
+        var name = "<?php echo !empty($_POST['name']) ? $_POST['name'] : ""; ?>";
         
-        //Switch after delay
-        var switchAfter = <?php echo $test["Switch"]["after"]; ?>;
+        //Switch after delay - same for every block
+        var switchAfter = <?php echo $test["Block"]["1"]["Switch"]["after"]; ?>;
         
-        //Switch duration
-        var switchDuration = <?php echo $test["Switch"]["duration"]; ?>;
+        //Switch duration - same for every block
+        var switchDuration = <?php echo $test["Block"]["1"]["Switch"]["duration"]; ?>;
         
         //Number of instruction pages
         var numInstructions = <?php echo count($instructionsEven); ?>;
         
         //Type of test - practice or test
         var typeTest = "<?php echo $type; ?>";
+        
+        var blockNum = <?php echo $block; ?>;
+        
+        var notSaved = <?php echo (!isset($_GET['record']) and empty($_GET['block'])) ? "true" : "false"; ?>;
         
     </script>
     
@@ -261,7 +263,7 @@
     endif; 
     
     //If showing header at top, show footer at bottom
-    if (empty($name)) {
+    if (empty($_POST) and empty($_GET)) {
         require_once ($footer);
     }
 ?>

@@ -2,21 +2,40 @@
     session_start();?>
 <title>Test</title>
 <?php
+    // print_r($_GET);
+    // echo "<br><br>";
+    // print_r($_POST);
+    
     $arr = decodeJSON($soundResponses);
     $results = array ();
-    $results["date"] = date("m-d-y h:i:s a");
-    $results["type"] = $_GET['typeTest'];
-    $results["participant"] = $_GET['participant'];
-    $tests = decodeJSON ($soundTests);
-    $test = $tests["test"];
-    $correctAnswers = $test["Right Answers"];
-    $numBlocks = count($test["Block"]);
     
-    $blocks = array ();
-    $offset = 0;
+    // Just Saving the Record 
+    if (isset($_GET['participant'])) {
+        $results["date"] = date("m-d-y h:i:s a");
+        $results["type"] = $_GET['typeTest'];
+        $results["participant"] = $_GET['participant'];
+        $arr[$_GET['key']] = $results;
+        encodeJSON ($soundResponses, $arr); ?>
+        
+        <!--Redirect to Test -->
+        <script type="text/javascript">
+            window.location = "<?php echo $subdir.'test/soundTest.php?record&type='.$_GET['typeTest']; ?>";
+        </script>
+<?php
+    }
     
-    for ($j = 1; $j <= $numBlocks; $j++) {
-        $numQuestions = count($test["Block"][$j]);
+    
+    // Saving the Results 
+    else {
+        $tests = decodeJSON ($soundTests);
+        $test = $tests[$_GET['typeTest']];
+        $correctAnswers = $test["Right Answers"];
+        
+        $block = $_GET['block'];
+        $numQuestions = count($test["Block"][$block]);
+        
+        $offset = ($block-1) * $numQuestions;
+        
         $numCorrect = $numWrong = $totalNum = 0;
         $correct125 = $correct200 = $wrong125 = $wrong200 = 0;
         $total125 = $total200 = $score125 = $score200 = 0;
@@ -26,21 +45,21 @@
         $questions = array ();
         
         for ($i = 1; $i <= $numQuestions; $i++) {
-            $k = $i + $offset;
             $questions[$i] = array ();
             
-            if ($_GET[$k] == 39) { //right
+            if ($_POST["r".$i] == 39) { //right
                 $questions[$i]["answer"] = "right"; 
-            } elseif ($_GET[$k] == 37) { //left
+            } elseif ($_POST["r".$i] == 37) { //left
                 $questions[$i]["answer"] = "left";
             } else { //was saving participant as 'no response'
                 $questions[$i]["answer"] = "no response"; //timed out
             }
             
-            $timeout = $_GET[$k."_time"] > 750; //timed out
-            if ($correctAnswers[$k] == $questions[$i]["answer"]) {
+            $timeout = $_POST["rt".$i] >= 750; //timed out
+            if ($correctAnswers[$i + $offset] == $questions[$i]["answer"]) {
                 $numCorrect = $timeout ? $numCorrect : $numCorrect+1; //to compute average - know what to divide by
-                $correct += $timeout ? 0 : $_GET[$k."_time"]; //add response time to compute average
+                $correct += $timeout ? 0 : $_POST["rt".$i]; //add response time to compute average
+                
                 $questions[$i]["correct"] = "true";   
                 $score++;
             } else {
@@ -48,21 +67,22 @@
                     $missed++;
                 }
                 if ($test["Block"][$j][$i]["tone"] == "200") {
-                    $wrong200 += $timeout ? 0 : $_GET[$k."_time"]; //add response time to compute average
+                    $wrong200 += $timeout ? 0 : $_POST["rt".$i]; //add response time to compute average
                     $numWrong200 = $timeout ? $numWrong200 : $numWrong200+1; 
                 } else if ($test["Block"][$j][$i]["tone"] == "125") {
-                    $wrong125 += $timeout ? 0 : $_GET[$k."_time"]; //add response time to compute average
+                    $wrong125 += $timeout ? 0 : $_POST["rt".$i]; //add response time to compute average
                     $numWrong125 = $timeout ? $numWrong125 : $numWrong125+1; 
                 }
                 $numWrong = $timeout ? $numWrong : $numWrong+1; //to compute average - know what to divide by
-                $wrong += $timeout ? 0 : $_GET[$k."_time"]; //add response time to compute average
+                $wrong += $timeout ? 0 : $_POST["rt".$i]; //add response time to compute average
                 $questions[$i]["correct"] = "false";   
             }
             
-            $questions[$i]["response time"] = $timeout ? "0ms" : $_GET[$k."_time"]."ms";
-            $total += $timeout ? 0 : $_GET[$k."_time"];
+            $questions[$i]["response time"] = $timeout ? "0ms" : $_POST["rt".$i]."ms";
+            $total += $timeout ? 0 : $_POST["rt".$i];
             $totalNum = $timeout ? $totalNum : $totalNum+1; 
         }
+        
         $avgCorrect = round($correct/$numCorrect, 2);
         
         $avgWrong = round($wrong/$numWrong, 2);
@@ -71,28 +91,22 @@
         
         $avgTotal = round($total/$totalNum, 2);
         
-        $results["Block"][$j]["Score"]["total"] = $score;
-        $results["Block"][$j]["Score"]["125"] = $score125;
-        $results["Block"][$j]["Score"]["200"] = $score200;
+        $results["Score"]["total"] = $score;
+        $results["Score"]["125"] = $score125;
+        $results["Score"]["200"] = $score200;
         
-        $results["Block"][$j]["Missed"] = $missed;
-        $results["Block"][$j]["Questions"] = $questions;
+        $results["Missed"] = $missed;
+        $results["Questions"] = $questions;
         
-        $results["Block"][$j]["Average Correct"] = $avgCorrect."ms";
+        $results["Average Correct"] = $avgCorrect."ms";
         
-        $results["Block"][$j]["Average Wrong"]["total"] = $avgWrong."ms";
-        $results["Block"][$j]["Average Wrong"]["125"] = $avgWrong125."ms";
-        $results["Block"][$j]["Average Wrong"]["200"] = $avgWrong200."ms";
+        $results["Average Wrong"]["total"] = $avgWrong."ms";
+        $results["Average Wrong"]["125"] = $avgWrong125."ms";
+        $results["Average Wrong"]["200"] = $avgWrong200."ms";
         
-        $results["Block"][$j]["Average Total"] = $avgTotal."ms";
-        
-        $offset += $numQuestions;
+        $results["Average Total"] = $avgTotal."ms";
+    
+        $arr[$_GET['key']]["Block"][$block] = $results;
+        encodeJSON ($soundResponses, $arr);
     }
-    
-    $arr[] = $results;
-    encodeJSON ($soundResponses, $arr);
-    
 ?>
-<script type="text/javascript">
-    window.location = "<?php echo $results["type"] == "test" ? $subdir.'test/soundTest.php?done' : $subdir.'test/soundTest.php?pdone'; ?>";
-</script>

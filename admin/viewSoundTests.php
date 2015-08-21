@@ -12,7 +12,7 @@
 
 <a href="<?php if (!empty($_GET['type'])) echo 'viewSoundTests.php'; else echo 'admin.php'; ?>" target="_self" class="back"><?php if (!empty($_GET['type'])) echo 'Tests'; else echo 'Admin'; ?> &lt;&lt;</a>
 
-<h1>Test Blocks</h1>
+<h1>Test Versions</h1>
 
 <?php $tests = decodeJSON($soundTests); 
     if (empty($tests)) :
