@@ -175,6 +175,11 @@
         //Get the block
         $blockContents = $test["Block"]["$block"];
     ?>
+        <!-- Initial Target Screen -->
+        <div id="initial_target" style="display:none">
+            <h1><?php echo $blockContents["InitialTarget"]["text"]; ?></h1>
+        </div>
+        
         <!-- Switch Screen -->
         <div id="switch" style="display:none">
             <h1><?php echo $blockContents["Switch"]["text"]; ?></h1>
@@ -214,7 +219,7 @@
             
             //for each block get count of questions
             foreach ($test["Block"] as $blockContents) {
-                $arr .= (count($blockContents)-1).",";
+                $arr .= (count($blockContents)-2).",";
             }
             
             $arr = rtrim ($arr, ",");
@@ -242,6 +247,9 @@
         
         //Switch duration - same for every block
         var switchDuration = <?php echo $test["Block"]["1"]["Switch"]["duration"]; ?>;
+        
+        //Initial Target screen duration
+        var initialTargetDuration = <?php echo $test["Block"]["1"]["InitialTarget"]["duration"]; ?>;
         
         //Number of instruction pages
         var numInstructions = <?php echo count($instructionsEven); ?>;

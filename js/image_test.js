@@ -22,6 +22,15 @@ function showTestImage() {
     start = +new Date();
 }
 
+function showInitialTarget() {
+    show("initial_target"); //show initial target text
+    
+    setTimeout(function () {
+        hide("initial_target"); //hide switch text
+        showPause();
+    }, initialTargetDuration); //hide after the specified number of milliseconds
+}
+
 function nextQuestion() {
     imageIndex = +(getCookie("imageIndex"));
     
@@ -57,6 +66,64 @@ function showPause() {
     }, 1000); //blank screen for 1000 ms
 }
 
+function saveResults(saveLocation, key) {
+    //save the results
+    var url = saveLocation + "?key=" + key.toString() + "&typeTest=" + typeTest + '&block=' + blockNum; //URL of the save results page
+
+    var parameters = getCookie("r"); //send the responses
+    parameters += getCookie("rt"); //send the response times
+    
+    var mypostrequest = new ajaxRequest();
+    mypostrequest.onreadystatechange = function(){
+        if (mypostrequest.readyState == 4){
+            if (mypostrequest.status == 200 || window.location.href.indexOf("http") == -1){
+                // document.getElementById("result").innerHTML=mypostrequest.responseText;
+
+                var newURL = "";
+    
+                if (typeTest == 'test') {
+                    if (blockNum == 6) {
+                        newURL = '/test/imageTest.php?done';
+                    } else {
+                        newURL = '/test/imageTest.php?type=' + typeTest + '&block=' + (blockNum+1).toString();
+                    }
+                } else {
+                    newURL = '/test/imageTest.php?pdone';
+                }
+                
+                window.location = newURL;
+            }
+            else {
+                alert("An error has occured saving the responses");
+            }
+        }
+    }
+    
+    // var parameters = "name="+namevalue+"&age="+agevalue;
+    mypostrequest.open("POST", url, true);
+    mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    mypostrequest.send(parameters);
+}
+
+function ajaxRequest() {
+    var activexmodes = ["Msxml2.XMLHTTP", "Microsoft.XMLHTTP"]; //activeX versions to check for in IE
+    if (window.ActiveXObject) { //Test for support for ActiveXObject in IE first (as XMLHttpRequest in IE7 is broken)
+        for (var i = 0; i < activexmodes.length; i++) {
+            try {
+                return new ActiveXObject(activexmodes[i]);
+            }
+            catch (e) {
+                //suppress error
+            }
+        }
+    }
+    else if (window.XMLHttpRequest) // if Mozilla, Safari etc
+        return new XMLHttpRequest();
+    else
+        return false;
+}
+
+
 //Respond to user input
 function response(e) {
     end = +new Date();
@@ -84,7 +151,7 @@ function response(e) {
                 setTimeout(function () {
                     reset("instructionIndex"); //reset instruction index
                     setCookie("onInstructions", "false", 1); //reset instructions flag
-                    showQuestion();
+                    showInitialTarget(); //show the initial target screen, then proceed to test
                 }, 2000); //pause for 2s after they hit spacebar
             } else if (userResponse == left) { //left
                 if (instructionIndex > 1) { //can't go left any more than 1
@@ -164,6 +231,8 @@ function response(e) {
     }
 }
 
+
+
 var start, end; //time variables
 var imageIndex, instructionIndex; //index variables
 var toneIndex = 1; //global tone index
@@ -193,7 +262,7 @@ if (notSaved) {
         //First Block
         if (blockNum == 1) {
             setCookie("onInstructions", "false", 1); //set on instructions flag initially to false if test round 1
-            showTestImage();
+            showInitialTarget();
         }
     
         //Not first block
@@ -204,60 +273,3 @@ if (notSaved) {
     }
 }
 
-
-function saveResults(saveLocation, key) {
-    //save the results
-    var url = saveLocation + "?key=" + key.toString() + "&typeTest=" + typeTest + '&block=' + blockNum; //URL of the save results page
-
-    var parameters = getCookie("r"); //send the responses
-    parameters += getCookie("rt"); //send the response times
-    
-    var mypostrequest = new ajaxRequest();
-    mypostrequest.onreadystatechange = function(){
-        if (mypostrequest.readyState == 4){
-            if (mypostrequest.status == 200 || window.location.href.indexOf("http") == -1){
-                // document.getElementById("result").innerHTML=mypostrequest.responseText;
-
-                var newURL = "";
-    
-                if (typeTest == 'test') {
-                    if (blockNum == 6) {
-                        newURL = '/test/imageTest.php?done';
-                    } else {
-                        newURL = '/test/imageTest.php?type=' + typeTest + '&block=' + (blockNum+1).toString();
-                    }
-                } else {
-                    newURL = '/test/imageTest.php?pdone';
-                }
-                
-                window.location = newURL;
-            }
-            else {
-                alert("An error has occured saving the responses");
-            }
-        }
-    }
-    
-    // var parameters = "name="+namevalue+"&age="+agevalue;
-    mypostrequest.open("POST", url, true);
-    mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    mypostrequest.send(parameters);
-}
-
-function ajaxRequest() {
-    var activexmodes = ["Msxml2.XMLHTTP", "Microsoft.XMLHTTP"]; //activeX versions to check for in IE
-    if (window.ActiveXObject) { //Test for support for ActiveXObject in IE first (as XMLHttpRequest in IE7 is broken)
-        for (var i = 0; i < activexmodes.length; i++) {
-            try {
-                return new ActiveXObject(activexmodes[i]);
-            }
-            catch (e) {
-                //suppress error
-            }
-        }
-    }
-    else if (window.XMLHttpRequest) // if Mozilla, Safari etc
-        return new XMLHttpRequest();
-    else
-        return false;
-}

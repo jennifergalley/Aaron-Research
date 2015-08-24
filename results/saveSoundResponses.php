@@ -2,10 +2,6 @@
     session_start();?>
 <title>Test</title>
 <?php
-    // print_r($_GET);
-    // echo "<br><br>";
-    // print_r($_POST);
-    
     $arr = decodeJSON($soundResponses);
     $results = array ();
     
@@ -78,7 +74,7 @@
                 $questions[$i]["correct"] = "false";   
             }
             
-            $questions[$i]["response time"] = $timeout ? "0ms" : $_POST["rt".$i]."ms";
+            $questions[$i]["response time"] = $timeout ? "0" : $_POST["rt".$i];
             $total += $timeout ? 0 : $_POST["rt".$i];
             $totalNum = $timeout ? $totalNum : $totalNum+1; 
         }
@@ -98,13 +94,13 @@
         $results["Missed"] = $missed;
         $results["Questions"] = $questions;
         
-        $results["Average Correct"] = $avgCorrect."ms";
+        $results["Average Correct"] = $avgCorrect;
         
-        $results["Average Wrong"]["total"] = $avgWrong."ms";
-        $results["Average Wrong"]["125"] = $avgWrong125."ms";
-        $results["Average Wrong"]["200"] = $avgWrong200."ms";
+        $results["Average Wrong"]["total"] = $avgWrong;
+        $results["Average Wrong"]["125"] = $avgWrong125;
+        $results["Average Wrong"]["200"] = $avgWrong200;
         
-        $results["Average Total"] = $avgTotal."ms";
+        $results["Average Total"] = $avgTotal;
     
         $arr[$_GET['key']]["Block"][$block] = $results;
         encodeJSON ($soundResponses, $arr);

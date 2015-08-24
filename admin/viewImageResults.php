@@ -68,6 +68,7 @@
     <?php 
         $correctTotal = $correctFirst = $correctSecond = 0;
         $RTCorrect = $RTIncorrect = $RTTotal = 0;
+        $RTC40 = $RTC60 = $RTIC40 = $RTIC60 = $RTT40 = $RTT60 = 0;
         $numBlocks = count($r["Block"]);
     
         foreach ($r["Block"] as $b => $block) : ?>
@@ -87,21 +88,21 @@
             </tr>
             <tr>
                 <td><b>RT Correct</b></td>
-                <td><?php $RTCorrect += $block["Average Correct"]; echo $block["Average Correct"]; ?></td>
-                <td></td>
-                <td></td>
+                <td><?php $RTCorrect += $block["Average Correct"]; echo $block["Average Correct"]."ms"; ?></td>
+                <td><?php $RTC40 += $block["RT Correct First 40"]; echo $block["RT Correct First 40"]."ms"; ?></td>
+                <td><?php $RTC60 += $block["RT Correct Second 20"]; echo $block["RT Correct Second 20"]."ms"; ?></td>
             </tr>
             <tr>
                 <td><b>RT Incorrect</b></td>
-                <td><?php $RTIncorrect += $block["Average Wrong"]; echo $block["Average Wrong"]; ?></td>
-                <td></td>
-                <td></td>
+                <td><?php $RTIncorrect += $block["Average Wrong"]; echo $block["Average Wrong"]."ms"; ?></td>
+                <td><?php $RTIC40 += $block["RT Incorrect First 40"]; echo $block["RT Incorrect First 40"]."ms"; ?></td>
+                <td><?php $RTIC60 += $block["RT Incorrect Second 20"]; echo $block["RT Incorrect Second 20"]."ms"; ?></td>
             </tr>
             <tr>
                 <td><b>RT Total</b></td>
-                <td><?php $RTTotal += $block["Average Total"]; echo $block["Average Total"]; ?></td>
-                <td></td>
-                <td></td>
+                <td><?php $RTTotal += $block["Average Total"]; echo $block["Average Total"]."ms"; ?></td>
+                <td><?php $RTT40 += $block["RT Total First 40"]; echo $block["RT Total First 40"]."ms"; ?></td>
+                <td><?php $RTT60 += $block["RT Total Second 20"]; echo $block["RT Total Second 20"]."ms"; ?></td>
             </tr>
         </table>
         <br/>
@@ -125,20 +126,20 @@
             <tr>
                 <td><b>RT Correct</b></td>
                 <td><?php echo $RTCorrect / $numBlocks."ms"; ?></td>
-                <td></td>
-                <td></td>
+                <td><?php echo $RTC40 / $numBlocks."ms"; ?></td>
+                <td><?php echo $RTC60 / $numBlocks."ms"; ?></td>
             </tr>
             <tr>
                 <td><b>RT Incorrect</b></td>
                 <td><?php echo $RTIncorrect / $numBlocks."ms"; ?></td>
-                <td></td>
-                <td></td>
+                <td><?php echo $RTIC40 / $numBlocks."ms"; ?></td>
+                <td><?php echo $RTIC60 / $numBlocks."ms"; ?></td>
             </tr>
             <tr>
                 <td><b>RT Total</b></td>
                 <td><?php echo $RTTotal / $numBlocks."ms"; ?></td>
-                <td></td>
-                <td></td>
+                <td><?php echo $RTT40 / $numBlocks."ms"; ?></td>
+                <td><?php echo $RTT60 / $numBlocks."ms"; ?></td>
             </tr>
         </table>
     

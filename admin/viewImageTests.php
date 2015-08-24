@@ -63,16 +63,25 @@
     foreach ($t["Block"] as $num => $trials) : ?>
         <h2>Block <?php echo $num; ?></h2>
         
-        <!-- Switch Text -->
+        <!-- Initial Target & Switch Text -->
         <table>
             <tr> 
+                <td>Initial Target</td>
+                <td>Text</td>
+                <td><?php echo $trials["InitialTarget"]["text"]; ?></td>
+                <td>Duration (ms)</td>
+                <td><?php echo $trials["InitialTarget"]["duration"]; ?></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr> 
                 <td>Switch</td>
-                <td>After</td>
-                <td><?php echo $trials["Switch"]["after"]; ?></td>
                 <td>Text</td>
                 <td><?php echo $trials["Switch"]["text"]; ?></td>
                 <td>Duration (ms)</td>
                 <td><?php echo $trials["Switch"]["duration"]; ?></td>
+                <td>After</td>
+                <td><?php echo $trials["Switch"]["after"]; ?></td>
             </tr>
         </table>
         
@@ -88,7 +97,7 @@
         
         <?php 
             foreach ($trials as $n => $question) : 
-                if ($n != "Switch") :
+                if ($n != "Switch" and $n != "InitialTarget") :
         ?>
                     <!-- Characters and Colors -->
                     <tr> 

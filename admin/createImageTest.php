@@ -24,6 +24,9 @@
         $trials["Switch"]["text"] = $_POST['switch_text'];
         $trials["Switch"]["duration"] = 3000;
         
+        $trials["InitialTarget"]["text"] = $_POST['initial_target'];
+        $trials["InitialTarget"]["duration"] = 3000;
+        
         for ($i=0; $i<$_SESSION['trials']; $i++) {
             $index = $i+1;
             
@@ -102,6 +105,11 @@
     <form method="post" action="<?php echo $upload_url; ?>" enctype="multipart/form-data">
         <input type="hidden" name="block" value="<?php echo $block; ?>">
         <table>
+            <tr>
+                <!-- Initial Target -->
+                <td><label for="initial_target">Initial Target: </label></td>
+                <td><input name="initial_target" value="<?php echo (empty($currTest) or empty($currTest["Block"][$block]["InitialTarget"]["text"])) ? 'The first target is' : $currTest["Block"][$block]["InitialTarget"]["text"]; ?>" type="text"></td>
+            </tr>
             <tr>
                 <!-- Switch Text -->
                 <td><label for="switch_text">Switch Text: </label></td>

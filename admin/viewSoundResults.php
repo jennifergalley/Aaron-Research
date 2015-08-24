@@ -95,29 +95,29 @@
             </tr>
             <tr>
                 <td><b>RT Correct</b></td>
-                <td><?php $RTCorrect += $block["Average Correct"]; echo $block["Average Correct"]; ?></td>
+                <td><?php $RTCorrect += $block["Average Correct"]; echo $block["Average Correct"]."ms"; ?></td>
                 <td></td>
                 <td></td>
             </tr>
             <tr>
                 <td><b>RT Incorrect</b></td>
-                <td><?php $RTIncorrect += $block["Average Wrong"]["total"]; echo $block["Average Wrong"]["total"]; ?></td>
+                <td><?php $RTIncorrect += $block["Average Wrong"]["total"]; echo $block["Average Wrong"]["total"]."ms"; ?></td>
                 <td><?php 
-                    if ($block["Average Wrong"]["125"] != "0ms") {
+                    if ($block["Average Wrong"]["125"] != "0") {
                         $numIncorrect125++;
                     }
                     $RTIncorrect125 += $block["Average Wrong"]["125"]; 
-                    echo $block["Average Wrong"]["125"]; ?></td>
+                    echo $block["Average Wrong"]["125"]."ms"; ?></td>
                 <td><?php 
-                    if ($block["Average Wrong"]["200"] != "0ms") {
+                    if ($block["Average Wrong"]["200"] != "0") {
                         $numIncorrect200++;
                     }
                     $RTIncorrect200 += $block["Average Wrong"]["200"]; 
-                    echo $block["Average Wrong"]["200"]; ?></td>
+                    echo $block["Average Wrong"]["200"]."ms"; ?></td>
             </tr>
             <tr>
                 <td><b>RT Total</b></td>
-                <td><?php $RTTotal += $block["Average Total"]; echo $block["Average Total"]; ?></td>
+                <td><?php $RTTotal += $block["Average Total"]; echo $block["Average Total"]."ms"; ?></td>
                 <td></td>
                 <td></td>
             </tr>
