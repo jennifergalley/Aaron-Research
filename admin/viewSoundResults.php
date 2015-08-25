@@ -148,29 +148,29 @@
             </tr>
             <tr>
                 <td><b>RT Correct</b></td>
-                <td><?php echo $RTCorrect / $numBlocks."ms"; ?></td>
+                <td><?php echo round($RTCorrect / $numBlocks, 2)."ms"; ?></td>
                 <td></td>
                 <td></td>
             </tr>
             <tr>
                 <td><b>RT Incorrect</b></td>
-                <td><?php echo $RTIncorrect / $numBlocks."ms"; ?></td>
+                <td><?php echo round($RTIncorrect / $numBlocks, 2)."ms"; ?></td>
                 <td><?php 
                     if ($numIncorrect125 > 0)
-                        echo $RTIncorrect125 / $numIncorrect125."ms"; 
+                        echo round($RTIncorrect125 / $numIncorrect125, 2)."ms"; 
                     else
                         echo "0ms";
                     ?></td>
                 <td><?php 
                     if ($numIncorrect200 > 0)
-                        echo $RTIncorrect200 / $numIncorrect200."ms";
+                        echo round($RTIncorrect200 / $numIncorrect200, 2)."ms";
                     else
                         echo "0ms";
                    ?></td>
             </tr>
             <tr>
                 <td><b>RT Total</b></td>
-                <td><?php echo $RTTotal / $numBlocks."ms"; ?></td>
+                <td><?php echo round($RTTotal / $numBlocks, 2)."ms"; ?></td>
                 <td></td>
                 <td></td>
             </tr>

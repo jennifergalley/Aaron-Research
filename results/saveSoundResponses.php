@@ -30,77 +30,136 @@
         $block = $_GET['block'];
         $numQuestions = count($test["Block"][$block]);
         
-        $offset = ($block-1) * $numQuestions;
+        $offset = ($block - 1) * $numQuestions;
         
-        $numCorrect = $numWrong = $totalNum = 0;
-        $correct125 = $correct200 = $wrong125 = $wrong200 = 0;
-        $total125 = $total200 = $score125 = $score200 = 0;
-        $numCorrect125 = $numCorrect200 = $numWrong125 = $numWrong200 = 0;
-        $correct = $wrong = $total = 0;
-        $score = $missed = 0;
+        $score = $score125 = $score200 = 0;
+        $missed = 0;
+        
+        $RTcorrectSum = $RTwrongSum = $RTtotalSum = 0;
+        $numCorrectResponses = $numWrongResponses = $numTotalResponses = 0;
+        
+        $RTwrong125Sum = $RTwrong200Sum = 0;
+        $numWrong125 = $numWrong200 = 0;
+        
         $questions = array ();
         
         for ($i = 1; $i <= $numQuestions; $i++) {
-            $questions[$i] = array ();
+            $question = array ();
             
-            if ($_POST["r".$i] == 39) { //right
-                $questions[$i]["answer"] = "right"; 
-            } elseif ($_POST["r".$i] == 37) { //left
-                $questions[$i]["answer"] = "left";
-            } else { //was saving participant as 'no response'
-                $questions[$i]["answer"] = "no response"; //timed out
+            $tone = $test["Block"][$block][$i]["tone"];
+            $responseTime = $_POST["rt".$i];
+            $response = $_POST["r".$i];
+            
+            $responded = true;
+            
+            //Get the response
+            switch ($response) {
+                case 37: //left
+                    $question["answer"] = "left";
+                    break;
+                case 39: //right
+                    $question["answer"] = "right";
+                    break;
+                default: //anything else
+                    $question["answer"] = "no response";
+                    $responded = false;
+                    break;
             }
             
-            $timeout = $_POST["rt".$i] >= 750; //timed out
-            if ($correctAnswers[$i + $offset] == $questions[$i]["answer"]) {
-                $numCorrect = $timeout ? $numCorrect : $numCorrect+1; //to compute average - know what to divide by
-                $correct += $timeout ? 0 : $_POST["rt".$i]; //add response time to compute average
-                
-                $questions[$i]["correct"] = "true";   
+            //Save the response time, if they responded
+            $question["response time"] = $responded ? $responseTime : "0";
+            
+            //If they got it right
+            if ($correctAnswers[$i + $offset] == $question["answer"]) {
+                $question["correct"] = "true";   
                 $score++;
-            } else {
-                if ($test["Block"][$j][$i]["tone"] == "" and $questions[$i]["answer"] == "no response") {
-                    $missed++;
+                
+                //if they responded, get average response time
+                if ($responded) {
+                    $numCorrectResponses++; //to compute average - know what to divide by
+                    $RTcorrectSum += $responseTime; //add response time to compute average
                 }
-                if ($test["Block"][$j][$i]["tone"] == "200") {
-                    $wrong200 += $timeout ? 0 : $_POST["rt".$i]; //add response time to compute average
-                    $numWrong200 = $timeout ? $numWrong200 : $numWrong200+1; 
-                } else if ($test["Block"][$j][$i]["tone"] == "125") {
-                    $wrong125 += $timeout ? 0 : $_POST["rt".$i]; //add response time to compute average
-                    $numWrong125 = $timeout ? $numWrong125 : $numWrong125+1; 
+                        
+                //If there was a sound, increment score for that delay
+                switch($tone) {
+                    case "125": //125 ms delay
+                        $score125++;
+                        break;
+                    case "200": //200 ms delay
+                        $score200++;
+                        break;
+                    default: //no sound
+                        break;
                 }
-                $numWrong = $timeout ? $numWrong : $numWrong+1; //to compute average - know what to divide by
-                $wrong += $timeout ? 0 : $_POST["rt".$i]; //add response time to compute average
-                $questions[$i]["correct"] = "false";   
             }
             
-            $questions[$i]["response time"] = $timeout ? "0" : $_POST["rt".$i];
-            $total += $timeout ? 0 : $_POST["rt".$i];
-            $totalNum = $timeout ? $totalNum : $totalNum+1; 
+            //If they got it wrong
+            else {
+                $question["correct"] = "false";  
+                
+                switch ($tone) {
+                    case "":
+                        //No sound and they didn't respond
+                        if (!$responded) {
+                            $missed++;
+                        }
+                        break;
+                        
+                    case "125":
+                        //Sound with 125 ms delay - they got it wrong so we know they responded, get average response time
+                        $numWrong125++; //to compute average - know what to divide by
+                        $RTwrong125Sum += $responseTime; //add response time to compute average
+                        break;
+                        
+                    case "200":
+                        //Sound with 200 ms delay - they got it wrong so we know they responded, get average response time
+                        $numWrong200++; //to compute average - know what to divide by
+                        $RTwrong200Sum += $responseTime; //add response time to compute average
+                        break;
+                }
+                
+                //Total wrong - if they responded, get average response time
+                if ($responded) {
+                    $numWrongResponses++; //to compute average - know what to divide by
+                    $RTwrongSum += $responseTime; //add response time to compute average
+                }
+            }
+            
+            //Total Average Response time
+            if ($responded) {
+                $numTotalResponses++; //to compute average - know what to divide by
+                $RTtotalSum += $responseTime; //add response time to compute average
+            }
+            
+            //Save the question - response, correct, response time
+            $questions[$i] = $question;
         }
         
-        $avgCorrect = round($correct/$numCorrect, 2);
-        
-        $avgWrong = round($wrong/$numWrong, 2);
-        $avgWrong125 = round($wrong125 / $numWrong125, 2);
-        $avgWrong200 = round($wrong200 / $numWrong200, 2);
-        
-        $avgTotal = round($total/$totalNum, 2);
-        
+        //Score
         $results["Score"]["total"] = $score;
         $results["Score"]["125"] = $score125;
         $results["Score"]["200"] = $score200;
         
+        //Number of questions without a sound with no response
         $results["Missed"] = $missed;
+        
+        //Each question result - answer, correct, response time
         $results["Questions"] = $questions;
         
-        $results["Average Correct"] = $avgCorrect;
+        //Response Times
         
-        $results["Average Wrong"]["total"] = $avgWrong;
-        $results["Average Wrong"]["125"] = $avgWrong125;
-        $results["Average Wrong"]["200"] = $avgWrong200;
+        //Average Response time for correct responses (when there was a response)
+        $results["Average Correct"] = round($RTcorrectSum / $numCorrectResponses, 2);
         
-        $results["Average Total"] = $avgTotal;
+        //Average Response time for incorrect responses (when there was a response), divided by sound delay
+        $results["Average Wrong"]["total"] = round($RTwrongSum / $numWrongResponses, 2);
+        
+        $results["Average Wrong"]["125"] = round($RTwrong125Sum / $numWrong125, 2);
+        
+        $results["Average Wrong"]["200"] = round($RTwrong200Sum / $numWrong200, 2);
+        
+        //Average Response time total (when there was a response)
+        $results["Average Total"] = round($RTtotalSum / $numTotalResponses, 2);
     
         $arr[$_GET['key']]["Block"][$block] = $results;
         encodeJSON ($soundResponses, $arr);

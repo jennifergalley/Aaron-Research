@@ -123,9 +123,9 @@ function response(e) {
         //It was a response to a test image
         
         var r = getCookie("r");
-        r += "r" + imageIndex.toString() + "=" + userResponse + "&";
+        r += "r" + imageIndex.toString() + "=" + userResponse + "&"; //user response may be empty if they didn't respond
         var rt = getCookie("rt");
-        rt += "rt" + imageIndex.toString() + "=" + response_time + "&";
+        rt += "rt" + imageIndex.toString() + "=" + response_time + "&"; //may be 750+ if they didn't respond
         
         setCookie("r", r, 1); //save response
         setCookie("rt", rt, 1); //save response time
