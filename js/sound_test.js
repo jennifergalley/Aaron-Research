@@ -121,11 +121,12 @@ function response(e) {
         return;
     } else {
         //It was a response to a test image
-        
+        alert("executing");
         var r = getCookie("r");
         r += "r" + imageIndex.toString() + "=" + userResponse + "&"; //user response may be empty if they didn't respond
         var rt = getCookie("rt");
         rt += "rt" + imageIndex.toString() + "=" + response_time + "&"; //may be 750+ if they didn't respond
+        alert(r);
         
         setCookie("r", r, 1); //save response
         setCookie("rt", rt, 1); //save response time
@@ -164,6 +165,8 @@ if (notSaved) {
     setCookie("rt", "", 1);
     saveRecord("../results/saveSoundResponses.php", getCookie("key"));
 } else {
+    setCookie("r", "", 1); //prevent that shit
+    setCookie("rt", "", 1);
     reset("imageIndex"); //set image index initially to 1
 
     //If this is a practice test
@@ -187,13 +190,15 @@ if (notSaved) {
 }
 
 
-
+//i'm almost certain it's sending the responses correctly, which only leaves the grading - but check after block 2 after doing block 1
 function saveResults(saveLocation, key) {
     //save the results
     var url = saveLocation + "?key=" + key.toString() + "&typeTest=" + typeTest + '&block=' + blockNum; //URL of the save results page
+    //alert(url);
 
     var parameters = getCookie("r"); //send the responses
     parameters += getCookie("rt"); //send the response times
+    //alert(parameters);
     
     var mypostrequest = new ajaxRequest();
     mypostrequest.onreadystatechange = function(){

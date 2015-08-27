@@ -28,7 +28,7 @@
         $correctAnswers = $test["Right Answers"];
         
         $block = $_GET['block'];
-        $numQuestions = count($test["Block"][$block]);
+        $numQuestions = count($test["Block"]["$block"]);
         
         $offset = ($block - 1) * $numQuestions;
         
@@ -70,7 +70,7 @@
             $question["response time"] = $responded ? $responseTime : "0";
             
             //If they got it right
-            if ($correctAnswers[$i + $offset] == $question["answer"]) {
+            if ($correctAnswers[$i + $offset] == $question["answer"]) { //it's getting the correct index, and correct answers is fine
                 $question["correct"] = "true";   
                 $score++;
                 
@@ -101,7 +101,7 @@
                     case "":
                         //No sound and they didn't respond
                         if (!$responded) {
-                            $missed++;
+                            $missed++; //first of all, this logic is definitely wrong.
                         }
                         break;
                         
