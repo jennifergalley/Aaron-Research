@@ -18,13 +18,11 @@ function showTestImage() {
         allowResponses(); //allow a response
         
         //play sound
-        if (tones[toneIndex] != "") { //if not empty
+        if (tones[(+imageIndex)-1] != "") { //if not empty
             setTimeout(function() { //delay tone
                 playTone(); //play tone
-            }, tones[toneIndex]); //delay in ms
+            }, tones[(+imageIndex)-1]); //delay in ms
         }
-        
-        toneIndex++; //increment global tone index
         
         myTimeout = setTimeout(function() { //timeout, call response with null input
             timeout(); //if they didn't respond
@@ -121,18 +119,16 @@ function response(e) {
         return;
     } else {
         //It was a response to a test image
-        alert("executing");
         var r = getCookie("r");
         r += "r" + imageIndex.toString() + "=" + userResponse + "&"; //user response may be empty if they didn't respond
         var rt = getCookie("rt");
         rt += "rt" + imageIndex.toString() + "=" + response_time + "&"; //may be 750+ if they didn't respond
-        alert(r);
         
         setCookie("r", r, 1); //save response
         setCookie("rt", rt, 1); //save response time
         
         //If it was the last question
-        if (imageIndex == numQuestions[blockNum - 1]) {
+        if (imageIndex == numQuestions) {
             
             //save the results
             saveResults("../results/saveSoundResponses.php", getCookie("key"));
@@ -151,7 +147,6 @@ function response(e) {
 
 var start, end; //time variables
 var imageIndex, instructionIndex; //index variables
-var toneIndex = 0; //global tone index
 
 //Keycode legend
 var spacebar = 32;
@@ -194,17 +189,15 @@ if (notSaved) {
 function saveResults(saveLocation, key) {
     //save the results
     var url = saveLocation + "?key=" + key.toString() + "&typeTest=" + typeTest + '&block=' + blockNum; //URL of the save results page
-    //alert(url);
 
     var parameters = getCookie("r"); //send the responses
     parameters += getCookie("rt"); //send the response times
-    //alert(parameters);
     
     var mypostrequest = new ajaxRequest();
     mypostrequest.onreadystatechange = function(){
         if (mypostrequest.readyState == 4){
             if (mypostrequest.status == 200 || window.location.href.indexOf("http") == -1){
-                // document.getElementById("result").innerHTML=mypostrequest.responseText;
+                document.getElementById("debug").innerHTML = mypostrequest.responseText;
 
                 var newURL = "";
     
@@ -226,7 +219,6 @@ function saveResults(saveLocation, key) {
         }
     }
     
-    // var parameters = "name="+namevalue+"&age="+agevalue;
     mypostrequest.open("POST", url, true);
     mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     mypostrequest.send(parameters);

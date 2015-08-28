@@ -165,48 +165,22 @@
             var numBlocks = <?php echo count($test["Block"]); ?>;
             
             //Number of questions in each block
-            var numQuestions = [<?php 
-                $arr = "";
-                
-                //for each block get count of questions
-                foreach ($test["Block"] as $blockContents) {
-                    $arr .= count($blockContents).",";
-                }
-                
-                $arr = rtrim ($arr, ",");
-                echo $arr;
-            ?>];
+            var numQuestions = <?php echo count($blockContents); ?>;
             
             //Participant name
             var name = "<?php echo !empty($_POST['name']) ? $_POST['name'] : ""; ?>";
             
             //Tones to play
             var tones = [<?php 
-                $blockIndex = 1;
-                
-                //For each block
-                foreach ($test["Block"] as $b => $blockContents) {
-                    $questionIndex = 1;
+                //For each question
+                foreach ($blockContents as $index => $question) {
+                    //If there is a tone, then MS delay. Else, empty
+                    echo '"'.$question['tone'].'"';
                     
-                    //For each question
-                    foreach ($blockContents as $question) {
-                        //If there is a tone, then MS delay. Else, empty
-                        echo '"'.$question['tone'].'"';
-                        
-                        //if there is a next question
-                        if (array_key_exists($questionIndex+1, $blockContents)) {
-                            echo ", ";
-                        }
-                        
-                        $questionIndex++;
-                    }
-                    
-                    //If there is a next block
-                    if (array_key_exists ($blockIndex+1, $test["Block"])) {
+                    //if there is a next question
+                    if (array_key_exists($index+1, $blockContents)) {
                         echo ", ";
                     }
-                    
-                    $blockIndex++;
                 }
             ?>];
             

@@ -23,6 +23,7 @@
     
     // Saving the Results 
     else {
+
         $tests = decodeJSON ($soundTests);
         $test = $tests[$_GET['typeTest']];
         $correctAnswers = $test["Right Answers"];
@@ -102,6 +103,7 @@
                         //No sound and they didn't respond
                         if (!$responded) {
                             $missed++; //first of all, this logic is definitely wrong.
+                            //echo "<br> missed is: ".$missed;
                         }
                         break;
                         
