@@ -3,7 +3,7 @@
     require_once ("../config/global.php");
     require_once ($header);
 
-    redirectToLogin();
+    // redirectToLogin();
  
     if (!empty($_GET['del'])) {
         deleteTest ($_GET['del'], 'sound');

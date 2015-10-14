@@ -6,7 +6,7 @@
     $tests = decodeJSON ($soundTests);
     $error = "";
     
-    redirectToLogin();
+    // redirectToLogin();
     
     if (!empty($_POST['chooseType'])) {
         $_SESSION['type'] = $_POST['type'];

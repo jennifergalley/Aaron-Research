@@ -6,7 +6,7 @@
     $tests = decodeJSON ($imageTests);
     $error = "";
     
-    redirectToLogin();
+    // redirectToLogin();
     
     if (!empty($_POST['chooseType'])) {
         $_SESSION['type'] = $_POST['type'];
